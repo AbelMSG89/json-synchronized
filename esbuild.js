@@ -7,50 +7,72 @@ const watch = process.argv.includes('--watch');
  * @type {import('esbuild').Plugin}
  */
 const esbuildProblemMatcherPlugin = {
-	name: 'esbuild-problem-matcher',
+    name: 'esbuild-problem-matcher',
 
-	setup(build) {
-		build.onStart(() => {
-			console.log('[watch] build started');
-		});
-		build.onEnd((result) => {
-			result.errors.forEach(({ text, location }) => {
-				console.error(`✘ [ERROR] ${text}`);
-				console.error(`    ${location.file}:${location.line}:${location.column}:`);
-			});
-			console.log('[watch] build finished');
-		});
-	},
+    setup(build) {
+        build.onStart(() => {
+            console.log('[watch] build started');
+        });
+        build.onEnd((result) => {
+            if (result.errors.length > 0) {
+                console.error(`✘ [ERROR] Build failed with ${result.errors.length} errors`);
+            } else {
+                console.log('[watch] build finished');
+            }
+        });
+    },
 };
 
-async function main() {
-	const ctx = await esbuild.context({
-		entryPoints: [
-			'src/extension.ts'
-		],
-		bundle: true,
-		format: 'cjs',
-		minify: production,
-		sourcemap: !production,
-		sourcesContent: false,
-		platform: 'node',
-		outfile: 'dist/extension.js',
-		external: ['vscode'],
-		logLevel: 'silent',
-		plugins: [
-			/* add to the end of plugins array */
-			esbuildProblemMatcherPlugin,
-		],
-	});
-	if (watch) {
-		await ctx.watch();
-	} else {
-		await ctx.rebuild();
-		await ctx.dispose();
-	}
+async function buildExtension() {
+    const config = {
+        entryPoints: ['src/extension.ts'],
+        bundle: true,
+        format: 'cjs',
+        minify: production,
+        sourcemap: !production,
+        sourcesContent: false,
+        platform: 'node',
+        outfile: 'dist/extension.js',
+        external: ['vscode'],
+        logLevel: 'silent',
+        plugins: [esbuildProblemMatcherPlugin],
+    };
+
+    if (watch) {
+        esbuild.context(config).then(ctx => ctx.watch()); // Use context().watch() for watch mode
+    } else {
+        await esbuild.build(config);
+    }
 }
 
-main().catch(e => {
-	console.error(e);
-	process.exit(1);
-});
+async function buildWebview() {
+    const config = {
+        entryPoints: ['src/webview.tsx'],
+        bundle: true,
+        format: 'iife',
+        minify: production,
+        sourcemap: !production,
+        platform: 'browser',
+        outfile: 'dist/webview.js',
+        logLevel: 'silent',
+        plugins: [esbuildProblemMatcherPlugin],
+    };
+
+    if (watch) {
+        esbuild.context(config).then(ctx => ctx.watch()); // Use context().watch() for watch mode
+    } else {
+        await esbuild.build(config);
+    }
+}
+
+async function main() {
+    console.log("starting build process...");
+    try {
+        await Promise.all([buildExtension(), buildWebview()]);
+    } catch (e) {
+        console.error(e);
+        process.exit(1);
+    }
+}
+
+main();

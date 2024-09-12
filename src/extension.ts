@@ -2,6 +2,9 @@ import * as vscode from "vscode"
 import fs from "fs/promises"
 import path from "path"
 import crypto from "crypto"
+import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOMServer from 'react-dom/server';
 
 function getNonce() {
   return crypto.randomBytes(16).toString("base64")
@@ -33,51 +36,37 @@ async function readAndParseJson(
   return JSON.parse(content)
 }
 
-async function createWebviewPanel(
-  context: vscode.ExtensionContext,
-  fileUris: vscode.Uri[]
-): Promise<void> {
-  const fileNames: string[] = fileUris.map((uri) => path.basename(uri.fsPath))
+async function createWebviewPanel(context: vscode.ExtensionContext, fileUris: vscode.Uri[]) {
+  const fileNames: string[] = fileUris.map((uri) => path.basename(uri.fsPath));
   const jsonData: Array<Record<string, any>> = await Promise.all(
     fileUris.map((uri) => readAndParseJson(uri.fsPath))
-  )
-  const nonce = getNonce()
+  );
+  const nonce = getNonce(); 
 
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
-    "jsonFiles", // Identifies the type of the webview used for serialization
-    "Harmonize", // Title of the panel displayed to the user
-    vscode.ViewColumn.One, // Editor column to show the new webview panel in.
-    { enableScripts: true } // Webview options. More details can be found in VS Code API docs.
-  )
+    "jsonFiles",
+    "Harmonize JSON",
+    vscode.ViewColumn.One,
+    { enableScripts: true, retainContextWhenHidden: true }
+  );
 
-  panel.webview.html = getWebviewContent(fileNames, jsonData, nonce)
-
-  panel.webview.onDidReceiveMessage(
-    async (message) => {
-      if (message.command === "edit") {
-        const filePath = fileUris[message.fileIndex].fsPath
-        const jsonData = await readAndParseJson(filePath)
-        const parts = message.key.split("-")
-        let target = jsonData
-        for (let i = 1; i < parts.length; i++) {
-          if (i === parts.length - 1) {
-            target[parts[i]] = message.newValue
-          } else {
-            if (!target[parts[i]]) {
-              target[parts[i]] = {} // Ensure nested objects exist
-            }
-            target = target[parts[i]]
-          }
-        }
-        await fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), "utf-8")
-        vscode.window.showInformationMessage(
-          `Updated ${parts.join(".")} in ${path.basename(filePath)}`
-        )
-      }
-    },
-    undefined,
-    context.subscriptions
-  )
+  const scriptUri = panel.webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview.js'));
+	
+  panel.webview.html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-${nonce}';">
+    </head>
+    <body>
+      <div id="root"></div>
+      <script nonce="${nonce}" src="${scriptUri}"></script>
+      </script>
+    </body>
+    </html>
+  `;
 }
 
 function getWebviewContent(
