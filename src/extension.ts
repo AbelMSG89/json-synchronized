@@ -1,11 +1,6 @@
 import * as vscode from "vscode"
 import fs from "fs/promises"
 import path from "path"
-import crypto from "crypto"
-
-function getNonce() {
-  return crypto.randomBytes(16).toString("base64")
-}
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("json-harmonizer is active")
@@ -23,7 +18,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable)
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}
 
 async function readAndParseJson(
@@ -41,16 +35,15 @@ async function createWebviewPanel(
   const jsonData: Array<Record<string, any>> = await Promise.all(
     fileUris.map((uri) => readAndParseJson(uri.fsPath))
   )
-  const nonce = getNonce()
 
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
-    "jsonFiles", // Identifies the type of the webview used for serialization
-    "Harmonize", // Title of the panel displayed to the user
-    vscode.ViewColumn.One, // Editor column to show the new webview panel in.
-    { enableScripts: true } // Webview options. More details can be found in VS Code API docs.
+    "jsonFiles",
+    "Harmonize",
+    vscode.ViewColumn.One,
+    { enableScripts: true, retainContextWhenHidden: true }
   )
 
-  panel.webview.html = getWebviewContent(fileNames, jsonData, nonce)
+  panel.webview.html = getWebviewContent(fileNames, jsonData)
 
   panel.webview.onDidReceiveMessage(
     async (message) => {
@@ -58,13 +51,17 @@ async function createWebviewPanel(
         const filePath = fileUris[message.fileIndex].fsPath
         const jsonData = await readAndParseJson(filePath)
         const parts = message.key.split("-")
+        // remove the first parentID "root"
+        parts.shift()
         let target = jsonData
-        for (let i = 1; i < parts.length; i++) {
+
+        for (let i = 0; i < parts.length; i++) {
           if (i === parts.length - 1) {
             target[parts[i]] = message.newValue
           } else {
             if (!target[parts[i]]) {
-              target[parts[i]] = {} // Ensure nested objects exist
+              // ensure nested objects exist
+              target[parts[i]] = {}
             }
             target = target[parts[i]]
           }
@@ -82,8 +79,7 @@ async function createWebviewPanel(
 
 function getWebviewContent(
   fileNames: string[],
-  jsonData: Array<Record<string, any>>,
-  nonce: string
+  jsonData: Array<Record<string, any>>
 ): string {
   let tableHeaders = "<th>Key</th>"
   fileNames.forEach((name) => {
@@ -94,9 +90,13 @@ function getWebviewContent(
     dataArray: Array<Record<string, any>>,
     depth = 0,
     parentId = "root"
-  ) {
+  ): { rows: string; isMissingValue: number[] } {
     let rows = ""
     const allKeys = new Set<string>()
+    /**
+     * column index of the files that are missing values
+     */
+    const missingValues: number[] = []
 
     dataArray.forEach((obj) => {
       Object.keys(obj).forEach((key) => allKeys.add(key))
@@ -111,44 +111,65 @@ function getWebviewContent(
           !Array.isArray(obj[key])
       )
 
+      const nestIndentation = depth * 20
+
       if (isNested) {
-        rows += `<tr id="${uniqueRowId}-header" onclick="toggleVisibility('${uniqueRowId}');"><td style="padding-left: ${
-          depth * 20
-        }px; cursor: pointer;">${key}</td>${fileNames
-          .map(() => "<td></td>")
-          .join("")}</tr>`
         const nestedDataArray = dataArray.map((obj) => obj[key] || {})
-        const nestedRows = generateTableRows(
+        const { rows: nestedRows, isMissingValue } = generateTableRows(
           nestedDataArray,
           depth + 1,
           uniqueRowId
         )
-        rows += `<tr id="${uniqueRowId}" class="collapse" style="display:none;"><td colspan="${
-          fileNames.length + 1
-        }" style="padding:0;"><table style='border-spacing: 0; width: 100%; border-collapse: collapse; table-layout: fixed;'>${nestedRows}</table></td></tr>`
+
+        rows += `<tr id="${uniqueRowId}-header" onclick="toggleVisibility('${uniqueRowId}');">
+          <td style="padding-left: ${nestIndentation}px; cursor: pointer;">${key}</td>
+          ${fileNames
+            .map((_, index) => {
+              if (isMissingValue.includes(index)) {
+                return `<td class="missing-value"></td>`
+              }
+
+              return "<td></td>"
+            })
+            .join("")}
+        </tr>`
+
+        // Add the nested rows within a collapsible row
+        rows += `<tr id="${uniqueRowId}" class="collapse" style="display:none;">
+          <td colspan="${fileNames.length + 1}" style="padding:0;">
+            <table style='border-spacing: 0; width: 100%; border-collapse: collapse; table-layout: fixed;'>${nestedRows}</table>
+          </td>
+        </tr>`
       } else {
-        let row = `<tr><td style="padding-left: ${depth * 20}px;">${key}</td>`
+        let row = `<tr><td style="padding-left: ${nestIndentation}px;">${key}</td>`
+
         dataArray.forEach((obj, index) => {
-					const value = obj[key];
-          // Ensure to escape potential HTML in the content to prevent XSS and rendering issues
-          const safeContent = (obj[key] ?? "")
+          const value = obj[key]
+          const safeContent = (value ?? "")
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;")
-						const cellClass = !value ? 'missing-value' : '';
-						row += `<td contenteditable="true" class="${cellClass}" onfocus="this.setAttribute('data-original', this.innerText)" onblur="handleBlur('${uniqueRowId}', ${index}, this)">${safeContent}</td>`;
+
+          const cellClass = value?.trim() === "" ? "missing-value" : ""
+          if (cellClass) {
+            missingValues.push(index) // flag this row as having a missing value
+          }
+
+          row += `<td contenteditable="true" class="${cellClass}" onfocus="this.setAttribute('data-original', this.innerText)" 
+            onblur="handleBlur('${uniqueRowId}', ${index}, this)">${safeContent}</td>`
         })
+
         row += "</tr>"
         rows += row
       }
     })
 
-    return rows
+    return { rows, isMissingValue: missingValues }
   }
 
-  const tableRows = generateTableRows(jsonData)
+  const { rows: tableRows } = generateTableRows(jsonData)
 
   return `
     <html>
