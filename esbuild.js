@@ -39,7 +39,7 @@ async function buildExtension() {
     };
 
     if (watch) {
-        esbuild.context(config).then(ctx => ctx.watch()); // Use context().watch() for watch mode
+        esbuild.context(config).then(ctx => ctx.watch());
     } else {
         await esbuild.build(config);
     }
@@ -62,7 +62,7 @@ async function buildWebview() {
     };
 
     if (watch) {
-        esbuild.context(config).then(ctx => ctx.watch()); // Use context().watch() for watch mode
+        esbuild.context(config).then(ctx => ctx.watch());
     } else {
         await esbuild.build(config);
     }
