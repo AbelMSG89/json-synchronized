@@ -1,0 +1,38 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 5px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: black;
+}
+
+table > tbody > tr:not(.collapse) {
+  background-color: transparent;
+}
+
+table > tbody > tr:not(.collapse):hover {
+  background-color: #555555;
+}
+
+.collapse table {
+  border: none;
+}
+
+.collapse table tr {
+  background-color: transparent;
+}
+
+.missing-value {
+  background-color: #772222;
+}

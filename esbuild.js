@@ -56,6 +56,9 @@ async function buildWebview() {
         outfile: 'dist/webview.js',
         logLevel: 'silent',
         plugins: [esbuildProblemMatcherPlugin],
+        loader: {
+            '.css': 'text', // Add this line to handle CSS files
+        },
     };
 
     if (watch) {

@@ -1,5 +1,5 @@
 {
-	"include": ["src/webview.tsx", "src/extension.ts"],
+	"include": ["src/webview.tsx", "src/extension.ts", "src/declarations.d.ts"],
 	"compilerOptions": {
 		"module": "Node16",
 		"target": "ES2022",
