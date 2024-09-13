@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useReducer } from "react"
 import ReactDOM from "react-dom/client"
 import css from "./styles.css"
 
@@ -36,6 +36,7 @@ const App = () => {
       const message = event.data // The JSON data our extension sent
       switch (message.type) {
         case "json":
+          console.log(message.data)
           setJsonData(message.data)
           break
       }
@@ -72,11 +73,15 @@ const container = document.getElementById("root")
 const root = ReactDOM.createRoot(container)
 root.render(React.createElement(App))
 
-const Table: React.FC<{
+const Table = ({
+  fileNames,
+  dataArray,
+  handleEdit,
+}: {
   fileNames: string[]
   dataArray: Array<Record<string, any>>
   handleEdit: (uniqueRowId: string, fileIndex: number, newValue: string) => void
-}> = ({ fileNames, dataArray, handleEdit }) => {
+}) => {
   return (
     <table>
       <thead>
@@ -99,9 +104,18 @@ function generateTableRows(
   depth: number,
   parentId: string,
   fileNames: string[],
-  handleEdit: (uniqueRowId: string, fileIndex: number, newValue: string) => void
+  handleEdit: (
+    uniqueRowId: string,
+    fileIndex: number,
+    newValue: string
+  ) => void,
+  hasMissingValue?: (filesMissingValue: Set<number>) => void
 ): React.ReactNode {
   const allKeys = new Set<string>()
+  /**
+   * column index of the files that are missing values
+   */
+  const missingValues: Set<number> = new Set()
 
   dataArray.forEach((obj) => {
     Object.keys(obj).forEach((key) => allKeys.add(key))
@@ -122,6 +136,22 @@ function generateTableRows(
 
     if (isNested) {
       const nestedDataArray = dataArray.map((obj) => obj[key] || {})
+
+      let isMissing: Set<number>
+
+      const tableRows = generateTableRows(
+        nestedDataArray,
+        depth + 1,
+        uniqueRowId,
+        fileNames,
+        handleEdit,
+        (isMis: Set<number>) => (isMissing = isMis)
+      )
+
+      isMissing.forEach((m) => {
+        missingValues.add(m)
+      })
+
       rows.push(
         <React.Fragment key={uniqueRowId}>
           <tr
@@ -131,9 +161,13 @@ function generateTableRows(
             <td style={{ paddingLeft: nestIndentation, cursor: "pointer" }}>
               {key}
             </td>
-            {fileNames.map((_, index) => (
-              <td key={index}></td>
-            ))}
+            {fileNames.map((_, index) => {
+              if (isMissing.has(index)) {
+                return <td key={index} className="missing-value"></td>
+              }
+
+              return <td key={index}></td>
+            })}
           </tr>
           <tr id={uniqueRowId} className="collapse" style={{ display: "none" }}>
             <td colSpan={fileNames.length + 1} style={{ padding: 0 }}>
@@ -145,15 +179,7 @@ function generateTableRows(
                   tableLayout: "fixed",
                 }}
               >
-                <tbody>
-                  {generateTableRows(
-                    nestedDataArray,
-                    depth + 1,
-                    uniqueRowId,
-                    fileNames,
-                    handleEdit
-                  )}
-                </tbody>
+                <tbody>{tableRows}</tbody>
               </table>
             </td>
           </tr>
@@ -164,6 +190,10 @@ function generateTableRows(
         const value = obj[key]
         const safeContent = (value ?? "").toString()
         const cellClass = (value ?? "").trim() === "" ? "missing-value" : ""
+
+        if (cellClass) {
+          missingValues.add(index) // flag this row as having a missing value
+        }
 
         return (
           <td
@@ -184,12 +214,11 @@ function generateTableRows(
               if (newValue !== originalValue) {
                 handleEdit(uniqueRowId, index, newValue)
               }
-
-              // Update cell style based on whether the new value is empty
-              if (newValue.trim() === "") {
-                e.currentTarget.classList.add("missing-value")
-              } else {
-                e.currentTarget.classList.remove("missing-value")
+            }}
+            onKeyDown={(e) => {
+              console.log(e.key)
+              if(e.key === "Enter"){
+                ;(e.target as HTMLInputElement).blur(); 
               }
             }}
           >
@@ -206,6 +235,8 @@ function generateTableRows(
       )
     }
   })
+
+  hasMissingValue?.(missingValues)
 
   return rows
 }

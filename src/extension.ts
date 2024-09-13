@@ -4,13 +4,13 @@ import path from "path"
 import crypto from "crypto"
 
 function getNonce() {
-  let text = '';
+  let text = ""
   const possible =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
+    text += possible.charAt(Math.floor(Math.random() * possible.length))
   }
-  return text;
+  return text
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -48,7 +48,6 @@ async function createWebviewPanel(
     fileUris.map((uri) => readAndParseJson(uri.fsPath))
   )
   const nonce = getNonce()
-  
 
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
     "jsonFiles",
@@ -68,9 +67,8 @@ async function createWebviewPanel(
   )
 
   // Safely serialize the jsonData to avoid XSS attacks
-  const jsonDataString = JSON.stringify(jsonData).replace(/</g, "\\u003c")
-  const fileNamesString = JSON.stringify(fileNames).replace(/</g, '\\u003c');
-  
+  const fileNamesString = JSON.stringify(fileNames).replace(/</g, "\\u003c")
+
   // todo: <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-${nonce}'">;
   panel.webview.html = `
     <!DOCTYPE html>
@@ -84,7 +82,6 @@ async function createWebviewPanel(
       <div id="root"></div>
       <script nonce="${nonce}">
         // expose data to React
-        const initialData = ${jsonDataString};
         const fileNames = ${fileNamesString};
       </script>
       <script nonce="${nonce}" src="${scriptUri}"></script>
@@ -94,39 +91,45 @@ async function createWebviewPanel(
   `
 
   // send initial data
-  panel.webview.postMessage({ type: 'json', data: jsonData });
+  panel.webview.postMessage({ type: "json", data: jsonData })
 
   // Handle messages received from the webview
   panel.webview.onDidReceiveMessage(
     async (message) => {
       if (message.command === "edit") {
         // Handle edit message
-        const filePath = fileUris[message.fileIndex].fsPath;
-        const jsonData = await readAndParseJson(filePath);
-        const parts = message.key.split("-");
+        const filePath = fileUris[message.fileIndex].fsPath
+        const jsonData = await readAndParseJson(filePath)
+        const parts = message.key.split("-")
 
         // Remove the first parentID "root"
-        parts.shift();
-        let target = jsonData;
+        parts.shift()
+        let target = jsonData
 
         for (let i = 0; i < parts.length; i++) {
           if (i === parts.length - 1) {
-            target[parts[i]] = message.newValue;
+            target[parts[i]] = message.newValue
           } else {
             if (!target[parts[i]]) {
               // Ensure nested objects exist
-              target[parts[i]] = {};
+              target[parts[i]] = {}
             }
-            target = target[parts[i]];
+            target = target[parts[i]]
           }
         }
-        await fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), "utf-8");
+        await fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), "utf-8")
         vscode.window.showInformationMessage(
           `Updated ${parts.join(".")} in ${path.basename(filePath)}`
-        );
+        )
+
+        const newJsonData: Array<Record<string, any>> = await Promise.all(
+          fileUris.map((uri) => readAndParseJson(uri.fsPath))
+        )
+
+        panel.webview.postMessage({ type: 'json', data: newJsonData });
       }
     },
     undefined,
     context.subscriptions
-  );
+  )
 }
