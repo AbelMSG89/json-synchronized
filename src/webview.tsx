@@ -10,12 +10,12 @@ interface VsCodeApi {
 
 declare function acquireVsCodeApi(): VsCodeApi
 
-declare const fileNames: string[]
-
 const vscode = acquireVsCodeApi() // This function fetches the VS Code API
 
+type JSONData = {[key: string]: any}
+
 const App = () => {
-  const [jsonData, setJsonData] = useState([])
+  const [jsonData, setJsonData] = useState<JSONData>({})
 
   const handleEdit = (
     uniqueRowId: string,
@@ -36,7 +36,6 @@ const App = () => {
       const message = event.data // The JSON data our extension sent
       switch (message.type) {
         case "json":
-          console.log(message.data)
           setJsonData(message.data)
           break
       }
@@ -53,11 +52,12 @@ const App = () => {
     }
   }, [])
 
+
+  console.log(jsonData)
   return (
     <div>
       <Table
-        fileNames={fileNames}
-        dataArray={jsonData}
+        data={jsonData}
         handleEdit={handleEdit}
       />
     </div>
@@ -74,14 +74,22 @@ const root = ReactDOM.createRoot(container)
 root.render(React.createElement(App))
 
 const Table = ({
-  fileNames,
-  dataArray,
+  data,
   handleEdit,
 }: {
-  fileNames: string[]
-  dataArray: Array<Record<string, any>>
+  data: JSONData
   handleEdit: (uniqueRowId: string, fileIndex: number, newValue: string) => void
 }) => {
+
+  const fileNames = []
+  const dataArray = []
+  for (const key of Object.keys(data)) {
+    fileNames.push(key)
+    dataArray.push(data[key])
+  }
+
+
+
   return (
     <table>
       <thead>
@@ -100,7 +108,7 @@ const Table = ({
 }
 
 function generateTableRows(
-  dataArray: Array<Record<string, any>>,
+  dataArray: Array<JSONData>,
   depth: number,
   parentId: string,
   fileNames: string[],
@@ -216,7 +224,6 @@ function generateTableRows(
               }
             }}
             onKeyDown={(e) => {
-              console.log(e.key)
               if(e.key === "Enter"){
                 ;(e.target as HTMLInputElement).blur(); 
               }

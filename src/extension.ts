@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
-import fs from "fs/promises"
+import fsPromise from "fs/promises"
+import fs from "fs"
 import path from "path"
-import crypto from "crypto"
 
 function getNonce() {
   let text = ""
@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
       const files = await vscode.workspace.findFiles(
         new vscode.RelativePattern(uri.fsPath, "**/*.json")
       )
-      createWebviewPanel(context, files)
+      createWebviewPanel(uri.fsPath, context, files)
     }
   )
 
@@ -35,18 +35,33 @@ export function deactivate() {}
 async function readAndParseJson(
   filePath: string
 ): Promise<Record<string, any>> {
-  const content = await fs.readFile(filePath, { encoding: "utf-8" })
+  const content = await fsPromise.readFile(filePath, { encoding: "utf-8" })
   return JSON.parse(content)
 }
 
+function getFileName(baseUriPath: string, uri: vscode.Uri) {
+  return uri.fsPath.substring(baseUriPath.length, uri.fsPath.length)
+}
+
 async function createWebviewPanel(
+  baseUriPath: string,
   context: vscode.ExtensionContext,
   fileUris: vscode.Uri[]
 ) {
-  const fileNames: string[] = fileUris.map((uri) => path.basename(uri.fsPath))
-  const jsonData: Array<Record<string, any>> = await Promise.all(
-    fileUris.map((uri) => readAndParseJson(uri.fsPath))
+  const jsonData: Record<string, any> = {}
+
+  const result = await Promise.all(
+    fileUris.map(async (uri) => {
+      return {
+        // remove the part of the path that all files share
+        uri: getFileName(baseUriPath, uri),
+        json: await readAndParseJson(uri.fsPath),
+      }
+    })
   )
+
+  result.forEach(({ uri, json }) => (jsonData[uri] = json))
+
   const nonce = getNonce()
 
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
@@ -66,9 +81,6 @@ async function createWebviewPanel(
     vscode.Uri.joinPath(context.extensionUri, "dist", "webview.js")
   )
 
-  // Safely serialize the jsonData to avoid XSS attacks
-  const fileNamesString = JSON.stringify(fileNames).replace(/</g, "\\u003c")
-
   // todo: <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-${nonce}'">;
   panel.webview.html = `
     <!DOCTYPE html>
@@ -81,8 +93,6 @@ async function createWebviewPanel(
     <body>
       <div id="root"></div>
       <script nonce="${nonce}">
-        // expose data to React
-        const fileNames = ${fileNamesString};
       </script>
       <script nonce="${nonce}" src="${scriptUri}"></script>
       </script>
@@ -117,19 +127,28 @@ async function createWebviewPanel(
             target = target[parts[i]]
           }
         }
-        await fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), "utf-8")
+        await fsPromise.writeFile(
+          filePath,
+          JSON.stringify(jsonData, null, 2),
+          "utf-8"
+        )
         vscode.window.showInformationMessage(
           `Updated ${parts.join(".")} in ${path.basename(filePath)}`
         )
 
-        const newJsonData: Array<Record<string, any>> = await Promise.all(
-          fileUris.map((uri) => readAndParseJson(uri.fsPath))
-        )
-
-        panel.webview.postMessage({ type: 'json', data: newJsonData });
+        // listen to file changes instead
+        //panel.webview.postMessage({ type: 'json', data: newJsonData });
       }
     },
     undefined,
     context.subscriptions
   )
+
+  fileUris.forEach((fileUri) => {
+    fs.watch(fileUri.fsPath, {}, async () => {
+      const data = await readAndParseJson(fileUri.fsPath)
+      jsonData[getFileName(baseUriPath, fileUri)] = data
+      panel.webview.postMessage({ type: "json", data: jsonData })
+    })
+  })
 }
