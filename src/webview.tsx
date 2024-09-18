@@ -12,7 +12,7 @@ declare function acquireVsCodeApi(): VsCodeApi
 
 const vscode = acquireVsCodeApi() // This function fetches the VS Code API
 
-type JSONData = {[key: string]: any}
+type JSONData = { [key: string]: any }
 
 const App = () => {
   const [jsonData, setJsonData] = useState<JSONData>({})
@@ -52,14 +52,9 @@ const App = () => {
     }
   }, [])
 
-
-  console.log(jsonData)
   return (
     <div>
-      <Table
-        data={jsonData}
-        handleEdit={handleEdit}
-      />
+      <Table data={jsonData} handleEdit={handleEdit} />
     </div>
   )
 }
@@ -80,15 +75,12 @@ const Table = ({
   data: JSONData
   handleEdit: (uniqueRowId: string, fileIndex: number, newValue: string) => void
 }) => {
-
   const fileNames = []
   const dataArray = []
   for (const key of Object.keys(data)) {
     fileNames.push(key)
     dataArray.push(data[key])
   }
-
-
 
   return (
     <table>
@@ -129,6 +121,7 @@ function generateTableRows(
     Object.keys(obj).forEach((key) => allKeys.add(key))
   })
 
+  const nestIndentation = depth * 20
   const rows: React.ReactNode[] = []
 
   allKeys.forEach((key) => {
@@ -139,8 +132,6 @@ function generateTableRows(
         obj[key] !== null &&
         !Array.isArray(obj[key])
     )
-
-    const nestIndentation = depth * 20
 
     if (isNested) {
       const nestedDataArray = dataArray.map((obj) => obj[key] || {})
@@ -224,8 +215,8 @@ function generateTableRows(
               }
             }}
             onKeyDown={(e) => {
-              if(e.key === "Enter"){
-                ;(e.target as HTMLInputElement).blur(); 
+              if (e.key === "Enter") {
+                ;(e.target as HTMLInputElement).blur()
               }
             }}
           >
@@ -242,6 +233,14 @@ function generateTableRows(
       )
     }
   })
+
+  rows.push(
+    <tr key={parentId + "-addKey"}>
+      <td className="add-button-container">
+        <button style={{width: "100%", height: "100%", border: "none"}}>+</button>
+      </td>
+    </tr>
+  )
 
   hasMissingValue?.(missingValues)
 

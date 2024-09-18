@@ -22,7 +22,7 @@ table > tbody > tr:not(.collapse) {
 }
 
 table > tbody > tr:not(.collapse):hover {
-  background-color: #555555;
+  background-color: color-mix(in srgb,var(--vscode-editor-foreground),#0000 80%);
 }
 
 .collapse table {
@@ -34,5 +34,14 @@ table > tbody > tr:not(.collapse):hover {
 }
 
 .missing-value {
-  background-color: #772222;
+  background-color: #ff777744;
+}
+
+button {
+  background-color: #00000000;
+  color: var(--vscode-editor-foreground);
+}
+
+.add-button-container {
+  background-color: color-mix(in srgb,var(--vscode-editor-foreground),#0000 80%);
 }

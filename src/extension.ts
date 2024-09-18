@@ -36,7 +36,13 @@ async function readAndParseJson(
   filePath: string
 ): Promise<Record<string, any>> {
   const content = await fsPromise.readFile(filePath, { encoding: "utf-8" })
-  return JSON.parse(content)
+
+  try {
+    return JSON.parse(content)
+  } catch (e) {
+    console.warn(e)
+    return {}
+  }
 }
 
 function getFileName(baseUriPath: string, uri: vscode.Uri) {
