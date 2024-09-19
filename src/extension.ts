@@ -3,16 +3,6 @@ import fsPromise from "fs/promises"
 import fs from "fs"
 import path from "path"
 
-function getNonce() {
-  let text = ""
-  const possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length))
-  }
-  return text
-}
-
 export function activate(context: vscode.ExtensionContext) {
   console.log("json-harmonizer is active")
 
@@ -68,8 +58,6 @@ async function createWebviewPanel(
 
   result.forEach(({ uri, json }) => (jsonData[uri] = json))
 
-  const nonce = getNonce()
-
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
     "jsonFiles",
     "Harmonize JSON",
@@ -98,10 +86,7 @@ async function createWebviewPanel(
     </head>
     <body>
       <div id="root"></div>
-      <script nonce="${nonce}">
-      </script>
-      <script nonce="${nonce}" src="${scriptUri}"></script>
-      </script>
+      <script src="${scriptUri}"></script>
     </body>
     </html>
   `
@@ -119,19 +104,65 @@ async function createWebviewPanel(
         case "add":
           add(message)
           break
+        case "remove":
+          remove(message)
+          break
       }
     },
     undefined,
     context.subscriptions
   )
 
-  async function edit(message: any) {
-    const filePath = fileUris[message.fileIndex].fsPath
-    const newJsonData = await readAndParseJson(filePath)
+  async function remove(message: any) {
     const parts = message.key.split("-")
-
     // Remove the first parentID "root"
     parts.shift()
+  
+    fileUris.forEach(async (fileUri) => {
+      await deleteKey(parts, fileUri)
+    })
+  }
+
+  async function deleteKey(parts: string[], fileUri: vscode.Uri) {
+    const filePath = fileUri.fsPath
+    const jsonData = await readAndParseJson(filePath)
+  
+    let target = jsonData
+    const pathStack = []
+  
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (target[parts[i]] === undefined) {
+        // Key doesn't exist in this file, nothing to remove
+        return
+      }
+      pathStack.push(target)
+      target = target[parts[i]]
+    }
+  
+    const lastKey = parts[parts.length - 1]
+    if (target.hasOwnProperty(lastKey)) {
+      delete target[lastKey]
+  
+      await fsPromise.writeFile(
+        filePath,
+        JSON.stringify(jsonData, null, 2),
+        "utf-8"
+      )
+  
+      vscode.window.showInformationMessage(
+        `Removed ${parts.join(".")} in ${getFileName(baseUriPath, fileUri)}`
+      )
+    } else {
+      // Key doesn't exist in this file
+      vscode.window.showInformationMessage(
+        `Key ${parts.join(".")} not found in ${getFileName(baseUriPath, fileUri)}`
+      )
+    }
+  }
+
+  async function update(parts: string[], fileUri: vscode.Uri, message: any) {
+    const filePath = fileUri.fsPath
+    const newJsonData = await readAndParseJson(filePath)
 
     let target = newJsonData
     for (let i = 0; i < parts.length; i++) {
@@ -153,8 +184,19 @@ async function createWebviewPanel(
     vscode.window.showInformationMessage(
       `${message.command === "add" ? "Added" : "Updated"} ${parts.join(
         "."
-      )} in ${path.basename(filePath)}`
+      )} in ${getFileName(baseUriPath, fileUri)}`
     )
+  }
+
+
+  async function edit(message: any) {
+    const fileUri = fileUris[message.fileIndex]
+    const parts = message.key.split("-")
+
+    // Remove the first parentID "root"
+    parts.shift()
+
+    update(parts, fileUri, message)
   }
 
   async function add(message: any) {
@@ -163,31 +205,7 @@ async function createWebviewPanel(
     parts.shift()
 
     fileUris.forEach(async (fileUri) => {
-      const filePath = fileUri.fsPath
-      const newJsonData = await readAndParseJson(filePath)
-
-      let target = newJsonData
-      for (let i = 0; i < parts.length; i++) {
-        if (i === parts.length - 1) {
-          target[parts[i]] = message.newValue // Set the value for the key
-        } else {
-          if (!target[parts[i]]) {
-            // Ensure nested objects exist
-            target[parts[i]] = {}
-          }
-          target = target[parts[i]]
-        }
-      }
-      await fsPromise.writeFile(
-        filePath,
-        JSON.stringify(newJsonData, null, 2),
-        "utf-8"
-      )
-      vscode.window.showInformationMessage(
-        `${message.command === "add" ? "Added" : "Updated"} ${parts.join(
-          "."
-        )} in ${path.basename(filePath)}`
-      )
+      update(parts, fileUri, message)
     })
   }
 

@@ -20,6 +20,10 @@ table > tbody > tr:not(.collapse):hover {
   background-color: var(--vscode-toolbar-hoverBackground);
 }
 
+table > tbody > tr:not(.collapse):hover .remove-button {
+  visibility: visible;
+}
+
 .collapse table {
   border: none;
 }
@@ -30,6 +34,17 @@ table > tbody > tr:not(.collapse):hover {
 
 .missing-value {
   background-color: var(--vscode-inputValidation-errorBackground);
+}
+
+.remove-button {
+  visibility: hidden;
+  background-color: #00000000;
+  color: #cc5555;
+  border: 1px solid #cc5555;
+}
+
+.remove-button:hover {
+  background-color: #cc555555;
 }
 
 button {
@@ -45,8 +60,4 @@ button {
 
 button:hover {
   background-color: var(--vscode-button-hoverBackground);
-}
-
-.new-item-container {
-  background-color: color-mix(in srgb,var(--vscode-editor-foreground),#0000 90%);
 }

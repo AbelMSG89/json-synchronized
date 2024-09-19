@@ -127,6 +127,13 @@ function generateTableRows(
   const nestIndentation = 5 + depth * 20
   const rows: React.ReactNode[] = []
 
+  const handleRemove = (uniqueRowId: string) => {
+    vscode.postMessage({
+      command: "remove",
+      key: uniqueRowId,
+    })
+  }
+
   allKeys.forEach((key) => {
     const uniqueRowId = `${parentId}-${key}`
     const isNested = dataArray.some(
@@ -161,8 +168,23 @@ function generateTableRows(
             style={{ cursor: "pointer" }}
             onClick={() => toggleVisibility(uniqueRowId)}
           >
-            <td style={{ paddingLeft: nestIndentation, cursor: "pointer" }}>
-              {key}
+            <td>
+              <div
+                style={{
+                  paddingLeft: nestIndentation,
+                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                {key}
+                <button
+                  className="remove-button"
+                  onClick={() => handleRemove(uniqueRowId)}
+                >
+                  -
+                </button>
+              </div>
             </td>
             {fileNames.map((_, index) => {
               if (isMissing.has(index)) {
@@ -231,7 +253,23 @@ function generateTableRows(
 
       rows.push(
         <tr key={uniqueRowId}>
-          <td style={{ paddingLeft: nestIndentation }}>{key}</td>
+          <td>
+            <div
+              style={{
+                paddingLeft: nestIndentation,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              {key}
+              <button
+                className="remove-button"
+                onClick={() => handleRemove(uniqueRowId)}
+              >
+                -
+              </button>
+            </div>
+          </td>
           {rowCells}
         </tr>
       )
@@ -242,6 +280,7 @@ function generateTableRows(
     <AddNewKey
       key={parentId + "-addKey"}
       parentId={parentId}
+      fileCount={dataArray.length}
       nestIndentation={nestIndentation}
     />
   )
@@ -257,7 +296,11 @@ enum EditMode {
   GROUP = "group",
 }
 
-function AddNewKey(props: { parentId: string; nestIndentation: number }) {
+function AddNewKey(props: {
+  parentId: string
+  nestIndentation: number
+  fileCount: number
+}) {
   const [editMode, setEditMode] = useState<EditMode>(EditMode.NONE)
   const contentEditableRef = useRef<HTMLDivElement>(null)
 
@@ -271,21 +314,23 @@ function AddNewKey(props: { parentId: string; nestIndentation: number }) {
   if (editMode === EditMode.NONE) {
     return (
       <tr>
-        <td
-          className="new-item-container"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "5px",
-            paddingLeft: props.nestIndentation,
-          }}
-        >
-          Add
-          <button onClick={() => setEditMode(EditMode.FIELD)}>Field</button>
-          <button onClick={() => setEditMode(EditMode.GROUP)}>Group</button>
+        <td>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              paddingLeft: props.nestIndentation,
+            }}
+          >
+            Add
+            <button onClick={() => setEditMode(EditMode.FIELD)}>Field</button>
+            <button onClick={() => setEditMode(EditMode.GROUP)}>Group</button>
+          </div>
         </td>
-        <td></td>
-        <td></td>
+        {[...Array(props.fileCount)].map((_, i) => (
+          <td key={i}></td>
+        ))}
       </tr>
     )
   }
@@ -302,37 +347,39 @@ function AddNewKey(props: { parentId: string; nestIndentation: number }) {
 
   return (
     <tr>
-      <td
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          padding: "0",
-        }}
-      >
+      <td style={{ padding: "0" }}>
         <div
-          contentEditable
-          style={{ flexGrow: 1, lineHeight: "25px" }}
-          ref={contentEditableRef}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              submit()
-            }
-            if (e.key === "Escape") {
-              setEditMode(EditMode.NONE)
-            }
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
           }}
-        ></div>
-        <div
-          contentEditable={false}
-          style={{ display: "flex", gap: "5px", padding: "5px" }}
         >
-          <button onClick={() => setEditMode(EditMode.NONE)}>✕</button>
-          <button onClick={submit}> &#x2713;</button>
+          <div
+            contentEditable
+            style={{ flexGrow: 1, lineHeight: "25px" }}
+            ref={contentEditableRef}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                submit()
+              }
+              if (e.key === "Escape") {
+                setEditMode(EditMode.NONE)
+              }
+            }}
+          ></div>
+          <div
+            contentEditable={false}
+            style={{ display: "flex", gap: "5px", padding: "5px" }}
+          >
+            <button onClick={() => setEditMode(EditMode.NONE)}>✕</button>
+            <button onClick={submit}> &#x2713;</button>
+          </div>
         </div>
       </td>
-      <td></td>
-      <td></td>
+      {[...Array(props.fileCount)].map((_, i) => (
+        <td key={i}></td>
+      ))}
     </tr>
   )
 }
