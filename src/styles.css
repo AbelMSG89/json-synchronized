@@ -12,17 +12,12 @@ td {
   vertical-align: top;
 }
 
-th {
-  background-color: #f2f2f2;
-  color: black;
-}
-
 table > tbody > tr:not(.collapse) {
   background-color: transparent;
 }
 
 table > tbody > tr:not(.collapse):hover {
-  background-color: color-mix(in srgb,var(--vscode-editor-foreground),#0000 80%);
+  background-color: var(--vscode-toolbar-hoverBackground);
 }
 
 .collapse table {
@@ -34,14 +29,24 @@ table > tbody > tr:not(.collapse):hover {
 }
 
 .missing-value {
-  background-color: #ff777744;
+  background-color: var(--vscode-inputValidation-errorBackground);
 }
 
 button {
-  background-color: #00000000;
-  color: var(--vscode-editor-foreground);
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: var(--vscode-font-family);
+  font-size: 13px;
+  padding: 2px 7px 2px 7px;
 }
 
-.add-button-container {
-  background-color: color-mix(in srgb,var(--vscode-editor-foreground),#0000 80%);
+button:hover {
+  background-color: var(--vscode-button-hoverBackground);
+}
+
+.new-item-container {
+  background-color: color-mix(in srgb,var(--vscode-editor-foreground),#0000 90%);
 }

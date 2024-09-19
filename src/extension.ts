@@ -112,43 +112,84 @@ async function createWebviewPanel(
   // Handle messages received from the webview
   panel.webview.onDidReceiveMessage(
     async (message) => {
-      if (message.command === "edit") {
-        // Handle edit message
-        const filePath = fileUris[message.fileIndex].fsPath
-        const jsonData = await readAndParseJson(filePath)
-        const parts = message.key.split("-")
-
-        // Remove the first parentID "root"
-        parts.shift()
-        let target = jsonData
-
-        for (let i = 0; i < parts.length; i++) {
-          if (i === parts.length - 1) {
-            target[parts[i]] = message.newValue
-          } else {
-            if (!target[parts[i]]) {
-              // Ensure nested objects exist
-              target[parts[i]] = {}
-            }
-            target = target[parts[i]]
-          }
-        }
-        await fsPromise.writeFile(
-          filePath,
-          JSON.stringify(jsonData, null, 2),
-          "utf-8"
-        )
-        vscode.window.showInformationMessage(
-          `Updated ${parts.join(".")} in ${path.basename(filePath)}`
-        )
-
-        // listen to file changes instead
-        //panel.webview.postMessage({ type: 'json', data: newJsonData });
+      switch (message.command) {
+        case "edit":
+          edit(message)
+          break
+        case "add":
+          add(message)
+          break
       }
     },
     undefined,
     context.subscriptions
   )
+
+  async function edit(message: any) {
+    const filePath = fileUris[message.fileIndex].fsPath
+    const newJsonData = await readAndParseJson(filePath)
+    const parts = message.key.split("-")
+
+    // Remove the first parentID "root"
+    parts.shift()
+
+    let target = newJsonData
+    for (let i = 0; i < parts.length; i++) {
+      if (i === parts.length - 1) {
+        target[parts[i]] = message.newValue // Set the value for the key
+      } else {
+        if (!target[parts[i]]) {
+          // Ensure nested objects exist
+          target[parts[i]] = {}
+        }
+        target = target[parts[i]]
+      }
+    }
+    await fsPromise.writeFile(
+      filePath,
+      JSON.stringify(newJsonData, null, 2),
+      "utf-8"
+    )
+    vscode.window.showInformationMessage(
+      `${message.command === "add" ? "Added" : "Updated"} ${parts.join(
+        "."
+      )} in ${path.basename(filePath)}`
+    )
+  }
+
+  async function add(message: any) {
+    const parts = message.key.split("-")
+    // Remove the first parentID "root"
+    parts.shift()
+
+    fileUris.forEach(async (fileUri) => {
+      const filePath = fileUri.fsPath
+      const newJsonData = await readAndParseJson(filePath)
+
+      let target = newJsonData
+      for (let i = 0; i < parts.length; i++) {
+        if (i === parts.length - 1) {
+          target[parts[i]] = message.newValue // Set the value for the key
+        } else {
+          if (!target[parts[i]]) {
+            // Ensure nested objects exist
+            target[parts[i]] = {}
+          }
+          target = target[parts[i]]
+        }
+      }
+      await fsPromise.writeFile(
+        filePath,
+        JSON.stringify(newJsonData, null, 2),
+        "utf-8"
+      )
+      vscode.window.showInformationMessage(
+        `${message.command === "add" ? "Added" : "Updated"} ${parts.join(
+          "."
+        )} in ${path.basename(filePath)}`
+      )
+    })
+  }
 
   fileUris.forEach((fileUri) => {
     fs.watch(fileUri.fsPath, {}, async () => {

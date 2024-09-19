@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react"
+import React, { useState, useEffect, useReducer, useRef } from "react"
 import ReactDOM from "react-dom/client"
 import css from "./styles.css"
 
@@ -18,12 +18,13 @@ const App = () => {
   const [jsonData, setJsonData] = useState<JSONData>({})
 
   const handleEdit = (
+    command: string,
     uniqueRowId: string,
     fileIndex: number,
     newValue: string
   ) => {
     vscode.postMessage({
-      command: "edit",
+      command,
       key: uniqueRowId,
       fileIndex: fileIndex,
       newValue: newValue,
@@ -43,10 +44,6 @@ const App = () => {
 
     window.addEventListener("message", messageHandler)
 
-    // Request the latest data from the extension
-    // vscode.postMessage({ command: 'requestData' });
-
-    // Clean up the event listener on unmount
     return () => {
       window.removeEventListener("message", messageHandler)
     }
@@ -73,7 +70,12 @@ const Table = ({
   handleEdit,
 }: {
   data: JSONData
-  handleEdit: (uniqueRowId: string, fileIndex: number, newValue: string) => void
+  handleEdit: (
+    command: string,
+    uniqueRowId: string,
+    fileIndex: number,
+    newValue: string
+  ) => void
 }) => {
   const fileNames = []
   const dataArray = []
@@ -105,6 +107,7 @@ function generateTableRows(
   parentId: string,
   fileNames: string[],
   handleEdit: (
+    command: string,
     uniqueRowId: string,
     fileIndex: number,
     newValue: string
@@ -121,7 +124,7 @@ function generateTableRows(
     Object.keys(obj).forEach((key) => allKeys.add(key))
   })
 
-  const nestIndentation = depth * 20
+  const nestIndentation = 5 + depth * 20
   const rows: React.ReactNode[] = []
 
   allKeys.forEach((key) => {
@@ -155,6 +158,7 @@ function generateTableRows(
         <React.Fragment key={uniqueRowId}>
           <tr
             id={`${uniqueRowId}-header`}
+            style={{ cursor: "pointer" }}
             onClick={() => toggleVisibility(uniqueRowId)}
           >
             <td style={{ paddingLeft: nestIndentation, cursor: "pointer" }}>
@@ -211,7 +215,7 @@ function generateTableRows(
                 e.currentTarget.getAttribute("data-original") || ""
               const newValue = e.currentTarget.innerText
               if (newValue !== originalValue) {
-                handleEdit(uniqueRowId, index, newValue)
+                handleEdit("edit", uniqueRowId, index, newValue)
               }
             }}
             onKeyDown={(e) => {
@@ -235,16 +239,102 @@ function generateTableRows(
   })
 
   rows.push(
-    <tr key={parentId + "-addKey"}>
-      <td className="add-button-container">
-        <button style={{width: "100%", height: "100%", border: "none"}}>+</button>
-      </td>
-    </tr>
+    <AddNewKey
+      key={parentId + "-addKey"}
+      parentId={parentId}
+      nestIndentation={nestIndentation}
+    />
   )
 
   hasMissingValue?.(missingValues)
 
   return rows
+}
+
+enum EditMode {
+  NONE = "none",
+  FIELD = "field",
+  GROUP = "group",
+}
+
+function AddNewKey(props: { parentId: string; nestIndentation: number }) {
+  const [editMode, setEditMode] = useState<EditMode>(EditMode.NONE)
+  const contentEditableRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Focus the contentEditable div if the edit mode is FIELD or GROUP
+    if (editMode !== EditMode.NONE && contentEditableRef.current) {
+      contentEditableRef.current.focus()
+    }
+  }, [editMode])
+
+  if (editMode === EditMode.NONE) {
+    return (
+      <tr>
+        <td
+          className="new-item-container"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "5px",
+            paddingLeft: props.nestIndentation,
+          }}
+        >
+          Add
+          <button onClick={() => setEditMode(EditMode.FIELD)}>Field</button>
+          <button onClick={() => setEditMode(EditMode.GROUP)}>Group</button>
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+    )
+  }
+
+  const submit = () => {
+    vscode.postMessage({
+      command: "add",
+      key: `${props.parentId}-${contentEditableRef.current.innerText}`,
+      newValue: editMode === EditMode.GROUP ? {} : "",
+    })
+
+    setEditMode(EditMode.NONE)
+  }
+
+  return (
+    <tr>
+      <td
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          padding: "0",
+        }}
+      >
+        <div
+          contentEditable
+          style={{ flexGrow: 1, lineHeight: "25px" }}
+          ref={contentEditableRef}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              submit()
+            }
+            if (e.key === "Escape") {
+              setEditMode(EditMode.NONE)
+            }
+          }}
+        ></div>
+        <div
+          contentEditable={false}
+          style={{ display: "flex", gap: "5px", padding: "5px" }}
+        >
+          <button onClick={() => setEditMode(EditMode.NONE)}>✕</button>
+          <button onClick={submit}> &#x2713;</button>
+        </div>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+  )
 }
 
 function toggleVisibility(id: string) {
