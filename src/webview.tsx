@@ -214,12 +214,25 @@ function generateTableRows(
       )
     } else {
       const rowCells = dataArray.map((obj, index) => {
-        const value = obj[key]
+        let value = obj[key]
+        // throw error if value isn't a string
+        if (!(typeof value === "string") && !(value === undefined)) {
+          let joinedPath =
+            parentPath.length > 0 ? `${parentPath.join(".")}.` : ""
+
+          vscode.postMessage({
+            command: "invalidData",
+            newValue: `${fileNames[index]}: ${joinedPath}${key}: ${
+              value instanceof Array ? "Array" : typeof value
+            }`,
+          })
+          return
+        }
         const safeContent = (value ?? "").toString()
         const cellClass = (value ?? "").trim() === "" ? "missing-value" : ""
 
         if (cellClass) {
-          // flag this row as having a missing value
+          // flag this column as having a missing value
           missingValues.add(index)
         }
 

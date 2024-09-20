@@ -18,24 +18,22 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable)
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}
 
 async function readAndParseJson(
   filePath: string
 ): Promise<Record<string, any>> {
   const content = await fsPromise.readFile(filePath, { encoding: "utf-8" })
-
   try {
     return JSON.parse(content)
   } catch (e) {
     console.warn(e)
+    vscode.window.showErrorMessage(`Unable to parse JSON`, {
+      modal: true,
+      detail: filePath,
+    })
     return {}
   }
-}
-
-function getFileName(baseUriPath: string, uri: vscode.Uri) {
-  return uri.fsPath.substring(baseUriPath.length, uri.fsPath.length)
 }
 
 async function createWebviewPanel(
@@ -51,14 +49,25 @@ async function createWebviewPanel(
   const result = await Promise.all(
     fileUris.map(async (uri) => {
       return {
-        // remove the part of the path that all files share
-        uri: getFileName(baseUriPath, uri),
+        fileName: getFileName(baseUriPath, uri),
         json: await readAndParseJson(uri.fsPath),
       }
     })
   )
 
-  result.forEach(({ uri, json }) => (uriData[uri] = json))
+  result
+    .filter(({ fileName, json }) => {
+      if (json instanceof Array) {
+        vscode.window.showWarningMessage(
+          `
+          Unable to load file '${fileName}'. No support for JSON arrays.
+        `
+        )
+        return false
+      }
+      return true
+    })
+    .forEach(({ fileName, json }) => (uriData[fileName] = json))
 
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
     "jsonFiles",
@@ -68,7 +77,8 @@ async function createWebviewPanel(
       enableScripts: true,
       retainContextWhenHidden: true,
       localResourceRoots: [
-        vscode.Uri.joinPath(context.extensionUri, "dist"), // Allow the webview to load local resources from the 'dist' directory
+        // allow the webview to load local resources from the 'dist' directory
+        vscode.Uri.joinPath(context.extensionUri, "dist"),
       ],
     }
   )
@@ -77,7 +87,6 @@ async function createWebviewPanel(
     vscode.Uri.joinPath(context.extensionUri, "dist", "webview.js")
   )
 
-  // todo: <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-${nonce}'">;
   panel.webview.html = `
     <!DOCTYPE html>
     <html lang="en">
@@ -99,6 +108,15 @@ async function createWebviewPanel(
   panel.webview.onDidReceiveMessage(
     async (message) => {
       switch (message.command) {
+        case "invalidData":
+          vscode.window.showErrorMessage(
+            `
+              Invalid data: This extension only supports files containing a single JSON object with nested objects and string values. 
+            `,
+            { modal: true, detail: message.newValue }
+          )
+          panel.dispose()
+          break
         case "showWarning":
           vscode.window.showWarningMessage(message.newValue)
           break
@@ -130,7 +148,7 @@ async function createWebviewPanel(
 
     for (let i = 0; i < parts.length - 1; i++) {
       if (target[parts[i]] === undefined) {
-        // Key path doesn't exist, nothing to remove
+        // key path doesn't exist, nothing to remove
         return
       }
       target = target[parts[i]]
@@ -178,4 +196,11 @@ async function createWebviewPanel(
       panel.webview.postMessage({ type: "json", data: uriData })
     })
   })
+}
+
+/**
+ * remove the part of the path that all files share
+ */
+function getFileName(baseUriPath: string, uri: vscode.Uri) {
+  return uri.fsPath.substring(baseUriPath.length, uri.fsPath.length)
 }
