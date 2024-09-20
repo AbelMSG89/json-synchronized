@@ -95,7 +95,7 @@ const Table = ({
         </tr>
       </thead>
       <tbody>
-        {generateTableRows(dataArray, 0, ["root"], fileNames, handleEdit)}
+        {generateTableRows(dataArray, 0, [], fileNames, handleEdit)}
       </tbody>
     </table>
   )
