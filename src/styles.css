@@ -61,3 +61,7 @@ button {
 button:hover {
   background-color: var(--vscode-button-hoverBackground);
 }
+
+.has-error {
+  outline-color: var(--vscode-inputValidation-errorBorder);
+}

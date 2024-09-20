@@ -10,7 +10,7 @@ interface VsCodeApi {
 
 declare function acquireVsCodeApi(): VsCodeApi
 
-const vscode = acquireVsCodeApi() // This function fetches the VS Code API
+const vscode = acquireVsCodeApi()
 
 type JSONData = { [key: string]: any }
 
@@ -32,9 +32,9 @@ const App = () => {
   }
 
   useEffect(() => {
-    // Handle messages from the extension
+    // handle messages from the extension
     const messageHandler = (event: MessageEvent) => {
-      const message = event.data // The JSON data our extension sent
+      const message = event.data
       switch (message.type) {
         case "json":
           setJsonData(message.data)
@@ -127,7 +127,10 @@ function generateTableRows(
   const nestIndentation = 5 + depth * 20
   const rows: React.ReactNode[] = []
 
-  const handleRemove = (path: string[]) => {
+  const handleRemove = (e: React.MouseEvent, path: string[]) => {
+    // prevent click from expanding row if it's a nested object
+    e.stopPropagation()
+    e.preventDefault()
     vscode.postMessage({
       command: "remove",
       key: path,
@@ -179,7 +182,7 @@ function generateTableRows(
                 {key}
                 <button
                   className="remove-button"
-                  onClick={() => handleRemove(currentPath)}
+                  onClick={(e) => handleRemove(e, currentPath)}
                 >
                   -
                 </button>
@@ -216,7 +219,8 @@ function generateTableRows(
         const cellClass = (value ?? "").trim() === "" ? "missing-value" : ""
 
         if (cellClass) {
-          missingValues.add(index) // flag this row as having a missing value
+          // flag this row as having a missing value
+          missingValues.add(index)
         }
 
         return (
@@ -263,7 +267,7 @@ function generateTableRows(
               {key}
               <button
                 className="remove-button"
-                onClick={() => handleRemove(currentPath)}
+                onClick={(e) => handleRemove(e, currentPath)}
               >
                 -
               </button>
@@ -275,12 +279,30 @@ function generateTableRows(
     }
   })
 
+  const handleAdd = (key: string, value: any) => {
+    if (allKeys.has(key)) {
+      vscode.postMessage({
+        command: "showWarning",
+        newValue: "Key already exists",
+      })
+      return false
+    }
+
+    vscode.postMessage({
+      command: "add",
+      key: [...parentPath, key],
+      newValue: value,
+    })
+    return true
+  }
+
   rows.push(
     <AddNewKey
       key={parentPath.join("-") + "-addKey"}
       parentPath={parentPath}
       fileCount={dataArray.length}
       nestIndentation={nestIndentation}
+      handleAdd={handleAdd}
     />
   )
 
@@ -299,12 +321,14 @@ function AddNewKey(props: {
   parentPath: string[]
   nestIndentation: number
   fileCount: number
+  handleAdd: (key: string, value: any) => boolean
 }) {
   const [editMode, setEditMode] = useState<EditMode>(EditMode.NONE)
+  const [hasError, setHasError] = useState(false)
   const contentEditableRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Focus the contentEditable div if the edit mode is FIELD or GROUP
+    // focus the contentEditable div if the edit mode is FIELD or GROUP
     if (editMode !== EditMode.NONE && contentEditableRef.current) {
       contentEditableRef.current.focus()
     }
@@ -335,12 +359,20 @@ function AddNewKey(props: {
   }
 
   const submit = () => {
-    vscode.postMessage({
-      command: "add",
-      key: [...props.parentPath, contentEditableRef.current.innerText],
-      newValue: editMode === EditMode.GROUP ? {} : "",
-    })
+    if (
+      props.handleAdd(
+        contentEditableRef.current.innerText,
+        editMode === EditMode.GROUP ? {} : ""
+      )
+    ) {
+      setEditMode(EditMode.NONE)
+    } else {
+      setHasError(true)
+    }
+  }
 
+  const cancel = () => {
+    setHasError(false)
     setEditMode(EditMode.NONE)
   }
 
@@ -356,14 +388,17 @@ function AddNewKey(props: {
         >
           <div
             contentEditable
+            className={hasError ? "has-error" : ""}
             style={{ flexGrow: 1, lineHeight: "25px" }}
             ref={contentEditableRef}
+            onInput={() => setHasError(false)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
+                e.preventDefault()
                 submit()
               }
               if (e.key === "Escape") {
-                setEditMode(EditMode.NONE)
+                cancel()
               }
             }}
           ></div>
@@ -371,7 +406,7 @@ function AddNewKey(props: {
             contentEditable={false}
             style={{ display: "flex", gap: "5px", padding: "5px" }}
           >
-            <button onClick={() => setEditMode(EditMode.NONE)}>✕</button>
+            <button onClick={cancel}>✕</button>
             <button onClick={submit}> &#x2713;</button>
           </div>
         </div>

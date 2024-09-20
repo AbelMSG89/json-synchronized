@@ -1,7 +1,6 @@
 import * as vscode from "vscode"
 import fsPromise from "fs/promises"
 import fs from "fs"
-import path from "path"
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("json-harmonizer is active")
@@ -44,7 +43,10 @@ async function createWebviewPanel(
   context: vscode.ExtensionContext,
   fileUris: vscode.Uri[]
 ) {
-  const jsonData: Record<string, any> = {}
+  /**
+   * fileName -> json data map
+   */
+  const uriData: Record<string, any> = {}
 
   const result = await Promise.all(
     fileUris.map(async (uri) => {
@@ -56,7 +58,7 @@ async function createWebviewPanel(
     })
   )
 
-  result.forEach(({ uri, json }) => (jsonData[uri] = json))
+  result.forEach(({ uri, json }) => (uriData[uri] = json))
 
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
     "jsonFiles",
@@ -92,12 +94,14 @@ async function createWebviewPanel(
   `
 
   // send initial data
-  panel.webview.postMessage({ type: "json", data: jsonData })
+  panel.webview.postMessage({ type: "json", data: uriData })
 
-  // Handle messages received from the webview
   panel.webview.onDidReceiveMessage(
     async (message) => {
       switch (message.command) {
+        case "showWarning":
+          vscode.window.showWarningMessage(message.newValue)
+          break
         case "edit":
           const fileUri = fileUris[message.fileIndex]
           update(message.key, fileUri, message)
@@ -120,17 +124,15 @@ async function createWebviewPanel(
 
   async function deleteKey(parts: string[], fileUri: vscode.Uri) {
     const filePath = fileUri.fsPath
-    const jsonData = await readAndParseJson(filePath)
+    const jsonData = uriData[getFileName(baseUriPath, fileUri)]
 
     let target = jsonData
-    const pathStack = []
 
     for (let i = 0; i < parts.length - 1; i++) {
       if (target[parts[i]] === undefined) {
-        // Key doesn't exist in this file, nothing to remove
+        // Key path doesn't exist, nothing to remove
         return
       }
-      pathStack.push(target)
       target = target[parts[i]]
     }
 
@@ -143,24 +145,12 @@ async function createWebviewPanel(
         JSON.stringify(jsonData, null, 2),
         "utf-8"
       )
-
-      vscode.window.showInformationMessage(
-        `Removed ${parts.join(".")} in ${getFileName(baseUriPath, fileUri)}`
-      )
-    } else {
-      // Key doesn't exist in this file
-      vscode.window.showInformationMessage(
-        `Key ${parts.join(".")} not found in ${getFileName(
-          baseUriPath,
-          fileUri
-        )}`
-      )
     }
   }
 
   async function update(parts: string[], fileUri: vscode.Uri, message: any) {
     const filePath = fileUri.fsPath
-    const newJsonData = await readAndParseJson(filePath)
+    const newJsonData = uriData[getFileName(baseUriPath, fileUri)]
 
     let target = newJsonData
     for (let i = 0; i < parts.length; i++) {
@@ -168,7 +158,7 @@ async function createWebviewPanel(
         target[parts[i]] = message.newValue
       } else {
         if (!target[parts[i]]) {
-          // Ensure nested objects exist
+          // ensure nested objects exist
           target[parts[i]] = {}
         }
         target = target[parts[i]]
@@ -179,18 +169,13 @@ async function createWebviewPanel(
       JSON.stringify(newJsonData, null, 2),
       "utf-8"
     )
-    vscode.window.showInformationMessage(
-      `${message.command === "add" ? "Added" : "Updated"} ${parts.join(
-        "."
-      )} in ${getFileName(baseUriPath, fileUri)}`
-    )
   }
 
   fileUris.forEach((fileUri) => {
     fs.watch(fileUri.fsPath, {}, async () => {
       const data = await readAndParseJson(fileUri.fsPath)
-      jsonData[getFileName(baseUriPath, fileUri)] = data
-      panel.webview.postMessage({ type: "json", data: jsonData })
+      uriData[getFileName(baseUriPath, fileUri)] = data
+      panel.webview.postMessage({ type: "json", data: uriData })
     })
   })
 }
