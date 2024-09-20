@@ -114,7 +114,7 @@ async function createWebviewPanel(
   )
 
   async function remove(message: any) {
-    const parts = message.key.split("-")
+    const parts = message.key
     // Remove the first parentID "root"
     parts.shift()
   
@@ -191,7 +191,7 @@ async function createWebviewPanel(
 
   async function edit(message: any) {
     const fileUri = fileUris[message.fileIndex]
-    const parts = message.key.split("-")
+    const parts = message.key
 
     // Remove the first parentID "root"
     parts.shift()
@@ -200,7 +200,7 @@ async function createWebviewPanel(
   }
 
   async function add(message: any) {
-    const parts = message.key.split("-")
+    const parts = message.key
     // Remove the first parentID "root"
     parts.shift()
 

@@ -19,13 +19,13 @@ const App = () => {
 
   const handleEdit = (
     command: string,
-    uniqueRowId: string,
+    path: string[],
     fileIndex: number,
     newValue: string
   ) => {
     vscode.postMessage({
       command,
-      key: uniqueRowId,
+      key: path,
       fileIndex: fileIndex,
       newValue: newValue,
     })
@@ -72,7 +72,7 @@ const Table = ({
   data: JSONData
   handleEdit: (
     command: string,
-    uniqueRowId: string,
+    path: string[],
     fileIndex: number,
     newValue: string
   ) => void
@@ -95,7 +95,7 @@ const Table = ({
         </tr>
       </thead>
       <tbody>
-        {generateTableRows(dataArray, 0, "root", fileNames, handleEdit)}
+        {generateTableRows(dataArray, 0, ["root"], fileNames, handleEdit)}
       </tbody>
     </table>
   )
@@ -104,11 +104,11 @@ const Table = ({
 function generateTableRows(
   dataArray: Array<JSONData>,
   depth: number,
-  parentId: string,
+  parentPath: string[],
   fileNames: string[],
   handleEdit: (
     command: string,
-    uniqueRowId: string,
+    path: string[],
     fileIndex: number,
     newValue: string
   ) => void,
@@ -127,15 +127,16 @@ function generateTableRows(
   const nestIndentation = 5 + depth * 20
   const rows: React.ReactNode[] = []
 
-  const handleRemove = (uniqueRowId: string) => {
+  const handleRemove = (path: string[]) => {
     vscode.postMessage({
       command: "remove",
-      key: uniqueRowId,
+      key: path,
     })
   }
 
   allKeys.forEach((key) => {
-    const uniqueRowId = `${parentId}-${key}`
+    const currentPath = [...parentPath, key]
+    const joinedPath = currentPath.join("-")
     const isNested = dataArray.some(
       (obj) =>
         typeof obj[key] === "object" &&
@@ -151,22 +152,20 @@ function generateTableRows(
       const tableRows = generateTableRows(
         nestedDataArray,
         depth + 1,
-        uniqueRowId,
+        currentPath,
         fileNames,
         handleEdit,
         (isMis: Set<number>) => (isMissing = isMis)
       )
 
-      isMissing.forEach((m) => {
-        missingValues.add(m)
-      })
+      isMissing.forEach((m) => missingValues.add(m))
 
       rows.push(
-        <React.Fragment key={uniqueRowId}>
+        <React.Fragment key={joinedPath}>
           <tr
-            id={`${uniqueRowId}-header`}
+            id={`${joinedPath}-header`}
             style={{ cursor: "pointer" }}
-            onClick={() => toggleVisibility(uniqueRowId)}
+            onClick={() => toggleVisibility(joinedPath)}
           >
             <td>
               <div
@@ -180,7 +179,7 @@ function generateTableRows(
                 {key}
                 <button
                   className="remove-button"
-                  onClick={() => handleRemove(uniqueRowId)}
+                  onClick={() => handleRemove(currentPath)}
                 >
                   -
                 </button>
@@ -194,7 +193,7 @@ function generateTableRows(
               return <td key={index}></td>
             })}
           </tr>
-          <tr id={uniqueRowId} className="collapse" style={{ display: "none" }}>
+          <tr id={joinedPath} className="collapse" style={{ display: "none" }}>
             <td colSpan={fileNames.length + 1} style={{ padding: 0 }}>
               <table
                 style={{
@@ -237,7 +236,7 @@ function generateTableRows(
                 e.currentTarget.getAttribute("data-original") || ""
               const newValue = e.currentTarget.innerText
               if (newValue !== originalValue) {
-                handleEdit("edit", uniqueRowId, index, newValue)
+                handleEdit("edit", currentPath, index, newValue)
               }
             }}
             onKeyDown={(e) => {
@@ -252,7 +251,7 @@ function generateTableRows(
       })
 
       rows.push(
-        <tr key={uniqueRowId}>
+        <tr key={joinedPath}>
           <td>
             <div
               style={{
@@ -264,7 +263,7 @@ function generateTableRows(
               {key}
               <button
                 className="remove-button"
-                onClick={() => handleRemove(uniqueRowId)}
+                onClick={() => handleRemove(currentPath)}
               >
                 -
               </button>
@@ -278,8 +277,8 @@ function generateTableRows(
 
   rows.push(
     <AddNewKey
-      key={parentId + "-addKey"}
-      parentId={parentId}
+      key={parentPath.join("-") + "-addKey"}
+      parentPath={parentPath}
       fileCount={dataArray.length}
       nestIndentation={nestIndentation}
     />
@@ -297,7 +296,7 @@ enum EditMode {
 }
 
 function AddNewKey(props: {
-  parentId: string
+  parentPath: string[]
   nestIndentation: number
   fileCount: number
 }) {
@@ -338,7 +337,7 @@ function AddNewKey(props: {
   const submit = () => {
     vscode.postMessage({
       command: "add",
-      key: `${props.parentId}-${contentEditableRef.current.innerText}`,
+      key: [...props.parentPath, contentEditableRef.current.innerText],
       newValue: editMode === EditMode.GROUP ? {} : "",
     })
 
