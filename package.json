@@ -1,8 +1,8 @@
 {
-  "name": "json-harmonizer",
-  "displayName": "JSON Harmonizer",
-  "description": "Synchronize JSON objects across multiple files.",
-  "version": "0.0.1",
+  "name": "json-synchronizer",
+  "displayName": "JSON Synchronizer",
+  "description": "Synchronize JSON objects across multiple files. Suitable for i18n.",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -14,15 +14,15 @@
   "contributes": {
     "commands": [
       {
-        "command": "json-harmonizer.harmonize",
-        "title": "Harmonize"
+        "command": "json-synchronizer.synchronize",
+        "title": "Synchronize JSON"
       }
     ],
     "menus": {
       "explorer/context": [
         {
           "when": "explorerResourceIsFolder",
-          "command": "json-harmonizer.harmonize",
+          "command": "json-synchronizer.synchronize",
           "group": "navigation"
         }
       ]

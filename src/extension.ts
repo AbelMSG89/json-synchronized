@@ -3,10 +3,8 @@ import fsPromise from "fs/promises"
 import fs from "fs"
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log("json-harmonizer is active")
-
   const disposable = vscode.commands.registerCommand(
-    "json-harmonizer.harmonize",
+    "json-synchronizer.synchronize",
     async (uri) => {
       const files = await vscode.workspace.findFiles(
         new vscode.RelativePattern(uri.fsPath, "**/*.json")
@@ -71,7 +69,7 @@ async function createWebviewPanel(
 
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
     "jsonFiles",
-    "Harmonize JSON",
+    "Synchronize JSON",
     vscode.ViewColumn.One,
     {
       enableScripts: true,
@@ -130,9 +128,19 @@ async function createWebviewPanel(
           })
           break
         case "remove":
-          fileUris.forEach((fileUri) => {
-            deleteKey(message.key, fileUri)
-          })
+          vscode.window
+            .showInformationMessage(
+              `Are you sure you want to delete ${message.key.join(".")}?`,
+              { modal: true },
+              "OK"
+            )
+            .then((res) => {
+              if (res === "OK") {
+                fileUris.forEach((fileUri) => {
+                  deleteKey(message.key, fileUri)
+                })
+              }
+            })
           break
       }
     },
