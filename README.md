@@ -7,13 +7,13 @@ JSON Synchronizer allows simultaneous editing of multiple JSON files, suitable f
 <div align="center">
   Right click on a folder and click "Synchronize JSON" to open all JSON files in the file structure below.<br>
 
-  ![feature X](media/folder-click.gif)
+  ![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/folder-click.gif?raw=true)
 
   Files are edited in realtime. <br>
-  ![feature X](media/realtime-edit.gif)
+  ![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/realtime-edit.gif?raw=true)
 
   Aggregates warnings of missing values in nested objects.<br>
-  ![feature X](media/aggregate-warnings.gif)
+  ![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/aggregate-warnings.gif?raw=true)
 </div>
 
 ## Known Issues
