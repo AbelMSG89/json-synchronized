@@ -1,7 +1,7 @@
 {
   "name": "json-synchronizer",
   "displayName": "JSON Synchronizer",
-  "description": "Synchronize JSON objects across multiple files. Suitable for i18n.",
+  "description": "Synchronize JSON objects across multiple files. Suitable for i18n management.",
   "version": "1.0.0",
   "engines": {
     "vscode": "^1.93.0"
