@@ -2,7 +2,7 @@
   "name": "json-synchronizer",
   "displayName": "JSON Synchronizer",
   "description": "Synchronize JSON objects across multiple files. Suitable for i18n management.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/oscar-green/json-synchronizer"
