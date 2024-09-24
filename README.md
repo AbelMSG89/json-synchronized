@@ -1,4 +1,9 @@
-# JSON Synchronizer
+<p align="center">
+  <img src="https://github.com/oscar-green/json-synchronizer/blob/main/media/logo.png?raw=true" width="94">
+</p>
+<h1 align="center">
+  JSON Synchronizer
+</h1>
 
 ## Features
 
@@ -7,13 +12,14 @@ JSON Synchronizer allows simultaneous editing of multiple JSON files, suitable f
 <div align="center">
   Right click on a folder and click "Synchronize JSON" to open all JSON files in the file structure below.<br>
 
-  ![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/folder-click.gif?raw=true)
+![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/folder-click.gif?raw=true)
 
-  Files are edited in realtime. <br>
-  ![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/realtime-edit.gif?raw=true)
+Files are edited in realtime. <br>
+![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/realtime-edit.gif?raw=true)
 
-  Aggregates warnings of missing values in nested objects.<br>
-  ![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/aggregate-warnings.gif?raw=true)
+Aggregates warnings of missing values in nested objects.<br>
+![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/aggregate-warnings.gif?raw=true)
+
 </div>
 
 ## Known Issues
