@@ -7,3 +7,7 @@
 ## [1.0.1]
 
 - Added logo
+
+## [1.0.3]
+
+- Handle discard changes in Git

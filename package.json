@@ -2,7 +2,7 @@
   "name": "json-synchronizer",
   "displayName": "JSON Synchronizer",
   "description": "Synchronize JSON objects across multiple files by editing them in a convenient table. Suitable for i18n management.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/oscar-green/json-synchronizer"

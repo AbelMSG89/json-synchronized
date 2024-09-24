@@ -21,16 +21,21 @@ export function deactivate() {}
 async function readAndParseJson(
   filePath: string
 ): Promise<Record<string, any>> {
-  const content = await fsPromise.readFile(filePath, { encoding: "utf-8" })
+  if (!fs.existsSync(filePath)) {
+    // File doesn't exist; handle accordingly
+    return {}
+  }
   try {
+    const content = await fsPromise.readFile(filePath, { encoding: "utf-8" })
+    if (!content.trim()) {
+      // Content is empty; return an empty object or handle accordingly
+      return {}
+    }
     return JSON.parse(content)
   } catch (e) {
     console.warn(e)
-    vscode.window.showErrorMessage(`Unable to parse JSON`, {
-      modal: true,
-      detail: filePath,
-    })
-    return {}
+    // Do not show error message here; handle it in the caller
+    throw e
   }
 }
 
@@ -49,23 +54,25 @@ async function createWebviewPanel(
       return {
         fileName: getFileName(baseUriPath, uri),
         json: await readAndParseJson(uri.fsPath),
+        uri,
       }
     })
   )
 
-  result
-    .filter(({ fileName, json }) => {
-      if (json instanceof Array) {
-        vscode.window.showWarningMessage(
-          `
-          Unable to load file '${fileName}'. No support for JSON arrays.
-        `
-        )
-        return false
-      }
-      return true
-    })
-    .forEach(({ fileName, json }) => (uriData[fileName] = json))
+  // Filter out files that contain arrays and show a warning
+  const validResults = result.filter(({ fileName, json }) => {
+    if (Array.isArray(json)) {
+      vscode.window.showWarningMessage(
+        `Unable to load file '${fileName}'. No support for JSON arrays.`
+      )
+      return false
+    }
+    return true
+  })
+
+  // Update uriData and fileUris with valid files only
+  validResults.forEach(({ fileName, json }) => (uriData[fileName] = json))
+  fileUris = validResults.map(({ uri }) => uri)
 
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
     "jsonFiles",
@@ -152,6 +159,11 @@ async function createWebviewPanel(
     const filePath = fileUri.fsPath
     const jsonData = uriData[getFileName(baseUriPath, fileUri)]
 
+    if (!jsonData) {
+      // The file was not loaded (e.g., contains an array)
+      return
+    }
+
     let target = jsonData
 
     for (let i = 0; i < parts.length - 1; i++) {
@@ -163,7 +175,7 @@ async function createWebviewPanel(
     }
 
     const lastKey = parts[parts.length - 1]
-    if (target.hasOwnProperty(lastKey)) {
+    if (Object.prototype.hasOwnProperty.call(target, lastKey)) {
       delete target[lastKey]
 
       await fsPromise.writeFile(
@@ -177,6 +189,11 @@ async function createWebviewPanel(
   async function update(parts: string[], fileUri: vscode.Uri, message: any) {
     const filePath = fileUri.fsPath
     const newJsonData = uriData[getFileName(baseUriPath, fileUri)]
+
+    if (!newJsonData) {
+      // The file was not loaded (e.g., contains an array)
+      return
+    }
 
     let target = newJsonData
     for (let i = 0; i < parts.length; i++) {
@@ -197,18 +214,76 @@ async function createWebviewPanel(
     )
   }
 
-  fileUris.forEach((fileUri) => {
-    fs.watch(fileUri.fsPath, {}, async () => {
-      const data = await readAndParseJson(fileUri.fsPath)
-      uriData[getFileName(baseUriPath, fileUri)] = data
+  // Create a single watcher for all JSON files in the folder
+  const pattern = new vscode.RelativePattern(baseUriPath, "**/*.json")
+  const watcher = vscode.workspace.createFileSystemWatcher(pattern)
+
+  const maxRetries = 5
+  const retryDelay = 50 // milliseconds
+
+  const pendingUpdates: { [key: string]: NodeJS.Timeout } = {}
+
+  async function handleFileChange(uri: vscode.Uri, attempt = 1) {
+    const fileName = getFileName(baseUriPath, uri)
+    try {
+      const data = await readAndParseJson(uri.fsPath)
+
+      if (Array.isArray(data)) {
+        vscode.window.showWarningMessage(
+          `Unable to load file '${fileName}'. No support for JSON arrays.`
+        )
+        // Remove the file from uriData and fileUris if it was previously valid
+        if (uriData[fileName]) {
+          delete uriData[fileName]
+          fileUris = fileUris.filter((file) => file.fsPath !== uri.fsPath)
+          panel.webview.postMessage({ type: "json", data: uriData })
+        }
+        return
+      }
+
+      // If the file was not previously loaded and is now valid, add it
+      if (!uriData[fileName]) {
+        uriData[fileName] = data
+        fileUris.push(uri)
+      } else {
+        uriData[fileName] = data
+      }
+
       panel.webview.postMessage({ type: "json", data: uriData })
-    })
+    } catch (e) {
+      // If the file is empty or invalid, retry after a short delay
+      if (attempt <= maxRetries) {
+        clearTimeout(pendingUpdates[uri.fsPath])
+        pendingUpdates[uri.fsPath] = setTimeout(() => {
+          handleFileChange(uri, attempt + 1)
+        }, retryDelay)
+      } else {
+        // After max retries, give up and show an error if necessary
+        console.warn(`Failed to parse JSON file after ${maxRetries} attempts: ${uri.fsPath}`)
+      }
+    }
+  }
+
+  watcher.onDidChange(handleFileChange)
+  watcher.onDidCreate(async (uri) => {
+    // Handle new file creation
+    await handleFileChange(uri)
   })
+  watcher.onDidDelete((uri) => {
+    // Handle file deletion
+    const fileName = getFileName(baseUriPath, uri)
+    delete uriData[fileName]
+    // Remove the fileUri from the array
+    fileUris = fileUris.filter((file) => file.fsPath !== uri.fsPath)
+    panel.webview.postMessage({ type: "json", data: uriData })
+  })
+
+  panel.onDidDispose(() => watcher.dispose())
 }
 
 /**
  * remove the part of the path that all files share
  */
 function getFileName(baseUriPath: string, uri: vscode.Uri) {
-  return uri.fsPath.substring(baseUriPath.length, uri.fsPath.length)
+  return uri.fsPath.substring(baseUriPath.length)
 }
