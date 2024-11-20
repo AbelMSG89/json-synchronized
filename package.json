@@ -2,10 +2,10 @@
   "name": "json-synchronizer",
   "displayName": "JSON Synchronizer",
   "description": "Synchronize JSON objects across multiple files by editing them in a convenient table. Suitable for i18n management.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "repository": {
     "type": "git",
-    "url": "https://github.com/oscar-green/json-synchronizer"
+    "url": "https://github.com/ogre-software/json-synchronizer"
   },
   "publisher": "ogre",
   "engines": {
@@ -62,7 +62,7 @@
     "@types/node": "20.x",
     "@types/react": "18.3.5",
     "@types/react-dom": "18.3.0",
-    "@typescript-eslint/eslint-plugin": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "8.15.0",
     "@typescript-eslint/parser": "^8.3.0",
     "eslint": "^9.9.1",
     "esbuild": "^0.23.1",
