@@ -149,6 +149,18 @@ async function createWebviewPanel(
               }
             })
           break
+        case "renameKey":
+          // Check if the new key already exists at the same level
+          const checkResult = checkKeyExists(message.oldPath, message.newKey, uriData)
+          if (checkResult.exists) {
+            vscode.window.showWarningMessage(`Key "${message.newKey}" already exists`)
+            return
+          }
+          
+          fileUris.forEach((fileUri) => {
+            renameKey(message.oldPath, message.newKey, fileUri)
+          })
+          break
       }
     },
     undefined,
@@ -184,6 +196,78 @@ async function createWebviewPanel(
         "utf-8"
       )
     }
+  }
+
+  function checkKeyExists(oldPath: string[], newKey: string, uriData: Record<string, any>): { exists: boolean } {
+    // Check if the new key exists at the same level in any file
+    for (const fileName in uriData) {
+      const jsonData = uriData[fileName]
+      if (!jsonData) {
+        continue
+      }
+
+      let target = jsonData
+      
+      // Navigate to the parent object
+      for (let i = 0; i < oldPath.length - 1; i++) {
+        if (!target[oldPath[i]]) {
+          target = null
+          break
+        }
+        target = target[oldPath[i]]
+      }
+
+      // Check if new key exists at this level
+      if (target && Object.prototype.hasOwnProperty.call(target, newKey)) {
+        return { exists: true }
+      }
+    }
+    return { exists: false }
+  }
+
+  async function renameKey(oldPath: string[], newKey: string, fileUri: vscode.Uri) {
+    const filePath = fileUri.fsPath
+    const jsonData = uriData[getFileName(baseUriPath, fileUri)]
+
+    if (!jsonData) {
+      // The file was not loaded (e.g., contains an array)
+      return
+    }
+
+    let target = jsonData
+
+    // Navigate to the parent object
+    for (let i = 0; i < oldPath.length - 1; i++) {
+      if (!target[oldPath[i]]) {
+        // Path doesn't exist, nothing to rename
+        return
+      }
+      target = target[oldPath[i]]
+    }
+
+    const oldKey = oldPath[oldPath.length - 1]
+    
+    // Check if the old key exists
+    if (!Object.prototype.hasOwnProperty.call(target, oldKey)) {
+      return
+    }
+
+    // Store the value
+    const value = target[oldKey]
+    
+    // Delete the old key and set the new key
+    delete target[oldKey]
+    target[newKey] = value
+
+    // Update the uriData with the new structure
+    uriData[getFileName(baseUriPath, fileUri)] = jsonData
+
+    // Write to file
+    await fsPromise.writeFile(
+      filePath,
+      JSON.stringify(jsonData, null, 2),
+      "utf-8"
+    )
   }
 
   async function update(parts: string[], fileUri: vscode.Uri, message: any) {
@@ -282,8 +366,17 @@ async function createWebviewPanel(
 }
 
 /**
- * remove the part of the path that all files share
+ * Extract a clean display name from the file path
+ * For files like /en.json -> "en"
+ * For nested files like /en/comments.json -> "en/comments"
  */
 function getFileName(baseUriPath: string, uri: vscode.Uri) {
-  return uri.fsPath.substring(baseUriPath.length)
+  const relativePath = uri.fsPath.substring(baseUriPath.length)
+  // Remove leading slash if present
+  const cleanPath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath
+  
+  // Remove .json extension
+  const withoutExtension = cleanPath.replace(/\.json$/, '')
+  
+  return withoutExtension
 }
