@@ -15,3 +15,7 @@
 ## [1.0.4]
 
 - Update dependencies
+
+## [1.1.0]
+
+- Add Improved UI/UX and added translation
