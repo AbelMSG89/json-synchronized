@@ -74,20 +74,21 @@
   background-color: var(--json-table-bg);
   color: var(--json-table-fg);
   border-radius: var(--json-table-radius-lg);
+  border: 2px solid var(--json-table-border);
 }
 
 .json-table__header {
   background-color: var(--json-table-header-bg);
   color: var(--json-table-fg);
   font-weight: var(--json-table-font-weight-bold);
-  border: 1px solid var(--json-table-border);
+  border: 2px solid var(--json-table-border);
   padding: var(--json-table-padding);
   text-align: left;
   vertical-align: top;
 }
 
 .json-table__cell {
-  border: 1px solid var(--json-table-border);
+  border: 2px solid var(--json-table-border);
   padding: var(--json-table-padding);
   text-align: left;
   vertical-align: top;
@@ -145,7 +146,7 @@
   visibility: hidden;
   background-color: transparent;
   color: var(--json-table-btn-fg);
-  border: 1px solid var(--json-table-border);
+  border: 2px solid var(--json-table-border);
   border-radius: var(--json-table-radius-sm);
   padding: var(--json-table-gap-xs);
   font-size: var(--json-table-font-size-xs);
@@ -212,7 +213,7 @@
 .json-table__btn {
   background-color: transparent;
   color: var(--json-table-btn-fg);
-  border: 1px solid var(--json-table-border);
+  border: 2px solid var(--json-table-border);
   border-radius: var(--json-table-radius-md);
   cursor: pointer;
   font-family: var(--json-table-font-family);
@@ -257,7 +258,7 @@
 }
 
 .json-table__btn--group-level-1 {
-  border: 1px solid var(--json-table-rainbow-1) !important;
+  border: 2px solid var(--json-table-rainbow-1) !important;
   color: var(--json-table-rainbow-1) !important;
   background-color: transparent;
 }
@@ -269,7 +270,7 @@
 }
 
 .json-table__btn--group-level-2 {
-  border: 1px solid var(--json-table-rainbow-2) !important;
+  border: 2px solid var(--json-table-rainbow-2) !important;
   color: var(--json-table-rainbow-2) !important;
   background-color: transparent;
 }
@@ -281,7 +282,7 @@
 }
 
 .json-table__btn--group-level-3 {
-  border: 1px solid var(--json-table-rainbow-3) !important;
+  border: 2px solid var(--json-table-rainbow-3) !important;
   color: var(--json-table-rainbow-3) !important;
   background-color: transparent;
 }
@@ -296,7 +297,7 @@
   visibility: hidden;
   background-color: transparent;
   color: var(--json-table-btn-fg);
-  border: 1px solid var(--json-table-border);
+  border: 2px solid var(--json-table-border);
   border-radius: var(--json-table-radius-sm);
   padding: var(--json-table-gap-xs);
   font-size: var(--json-table-font-size-xs);
@@ -327,7 +328,7 @@
   flex: 1;
   min-width: 0;
   background-color: var(--vscode-input-background);
-  border: 1px solid var(--vscode-input-border);
+  border: 2px solid var(--vscode-input-border);
   border-radius: var(--json-table-radius-sm);
   color: var(--vscode-input-foreground);
   font-family: var(--json-table-font-family);
@@ -361,7 +362,7 @@
 
 .json-table__edit-input:focus {
   border-color: var(--vscode-focusBorder, var(--json-table-btn-bg));
-  box-shadow: 0 0 0 1px var(--vscode-focusBorder, var(--json-table-btn-bg));
+  box-shadow: 0 0 0 2px var(--vscode-focusBorder, var(--json-table-btn-bg));
 }
 
 .json-table__edit-input--error {
