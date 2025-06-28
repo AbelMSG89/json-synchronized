@@ -1,22 +1,11 @@
-/* JSON Synchronizer Table Styles - BEM Methodology */
-
-/* CSS Custom Properties (Variables) */
 :root {
-  /* Base Size System using rem */
   --json-table-size-base: 1rem;
-  /* 16px by default */
   --json-table-size-xs: 0.5rem;
-  /* 8px */
   --json-table-size-sm: 0.75rem;
-  /* 12px */
   --json-table-size-md: 1rem;
-  /* 16px */
   --json-table-size-lg: 1.25rem;
-  /* 20px */
   --json-table-size-xl: 1.5rem;
-  /* 24px */
 
-  /* Colors */
   --json-table-bg: var(--vscode-editor-background);
   --json-table-fg: var(--vscode-editor-foreground);
   --json-table-border: var(--vscode-panel-border);
@@ -25,7 +14,6 @@
   --json-table-missing-bg: var(--vscode-inputValidation-errorBackground);
   --json-table-error-border: var(--vscode-inputValidation-errorBorder);
 
-  /* Button Colors */
   --json-table-btn-bg: var(--vscode-button-background);
   --json-table-btn-fg: var(--vscode-button-foreground);
   --json-table-btn-hover-bg: var(--vscode-button-hoverBackground);
@@ -34,83 +22,51 @@
   --json-table-btn-danger: var(--vscode-testing-iconFailed, #d73a49);
   --json-table-btn-danger-hover: var(--vscode-testing-iconFailed, #c62d2d);
 
-  /* Rainbow Colors */
   --json-table-rainbow-1: var(--vscode-editorBracketHighlight-foreground1, #d19a66);
   --json-table-rainbow-2: var(--vscode-editorBracketHighlight-foreground2, #c678dd);
   --json-table-rainbow-3: var(--vscode-editorBracketHighlight-foreground3, #56b6c2);
 
-  /* Input Colors */
   --json-table-input-bg: var(--vscode-input-background);
   --json-table-input-border: var(--vscode-input-border);
 
-  /* Spacing using rem */
   --json-table-padding: var(--json-table-size-xs);
   --json-table-gap-xs: calc(var(--json-table-size-base) * 0.125);
-  /* 2px */
   --json-table-gap-sm: calc(var(--json-table-size-base) * 0.25);
-  /* 4px */
   --json-table-gap-md: var(--json-table-size-xs);
-  /* 8px */
   --json-table-indent-1: calc(var(--json-table-size-base) * 1.5625);
-  /* 25px */
   --json-table-indent-2: calc(var(--json-table-size-base) * 2.8125);
-  /* 45px */
   --json-table-indent-3: calc(var(--json-table-size-base) * 4.0625);
-  /* 65px */
   --json-table-indent-4: calc(var(--json-table-size-base) * 5.3125);
-  /* 85px */
   --json-table-indent-5: calc(var(--json-table-size-base) * 6.5625);
-  /* 105px */
 
-  /* Typography using rem */
   --json-table-font-family: var(--vscode-font-family);
   --json-table-font-size-xs: var(--json-table-size-sm);
-  /* 12px */
   --json-table-font-size-sm: calc(var(--json-table-size-base) * 0.75);
-  /* 12px */
   --json-table-font-size-md: calc(var(--json-table-size-base) * 0.8125);
-  /* 13px */
   --json-table-font-weight-bold: 600;
   --json-table-line-height: calc(var(--json-table-size-base) * 1.5625);
-  /* 25px */
 
-  /* Border Radius using rem */
   --json-table-radius-sm: calc(var(--json-table-size-base) * 0.125);
-  /* 2px */
   --json-table-radius-md: calc(var(--json-table-size-base) * 0.1875);
-  /* 3px */
   --json-table-radius-lg: var(--json-table-size-xs);
-  /* 8px */
 
-  /* Transitions */
   --json-table-transition: 0.1s ease;
-
-  /* Opacity */
   --json-table-opacity-disabled: 0.7;
   --json-table-opacity-hover: 0.8;
 
-  /* Responsive breakpoints using rem */
   --json-table-breakpoint-sm: 48rem;
-  /* 768px */
   --json-table-breakpoint-xs: 30rem;
-  /* 480px */
 
-  /* Popup styles */
   --json-table-popup-bg: var(--vscode-dropdown-background);
   --json-table-popup-border: var(--vscode-dropdown-border);
   --json-table-popup-shadow: var(--vscode-widget-shadow);
-  --json-table-popup-z-index: 1000;
+  --json-table-popup-z-index: 99999;
 
-  /* Button sizes using rem */
   --json-table-btn-size-sm: var(--json-table-size-lg);
-  /* 20px */
   --json-table-btn-size-md: var(--json-table-size-xl);
-  /* 24px */
   --json-table-btn-size-lg: calc(var(--json-table-size-base) * 2);
-  /* 32px */
 }
 
-/* Table Component */
 .json-table {
   width: 100%;
   border-collapse: collapse;
@@ -136,7 +92,8 @@
   text-align: left;
   vertical-align: top;
   background-color: var(--json-table-bg);
-  overflow: visible; /* Allow popup to show outside cell */
+  overflow: visible;
+  position: relative;
 }
 
 .json-table__cell--missing {
@@ -156,7 +113,6 @@
   outline-color: var(--json-table-error-border);
 }
 
-/* Table Row */
 .json-table__row {
   background-color: var(--json-table-bg);
 }
@@ -169,7 +125,6 @@
   visibility: visible;
 }
 
-/* Key Cell Content */
 .json-table__key {
   display: flex;
   justify-content: space-between;
@@ -186,7 +141,6 @@
   padding: 2px var(--json-table-gap-sm);
 }
 
-/* Edit button for keys */
 .json-table__edit-btn {
   visibility: hidden;
   background-color: transparent;
@@ -214,27 +168,12 @@
   visibility: visible;
 }
 
-.json-table__key--level-1 {
-  padding-left: var(--json-table-indent-1);
-}
+.json-table__key--level-1 { padding-left: var(--json-table-indent-1); }
+.json-table__key--level-2 { padding-left: var(--json-table-indent-2); }
+.json-table__key--level-3 { padding-left: var(--json-table-indent-3); }
+.json-table__key--level-4 { padding-left: var(--json-table-indent-4); }
+.json-table__key--level-5 { padding-left: var(--json-table-indent-5); }
 
-.json-table__key--level-2 {
-  padding-left: var(--json-table-indent-2);
-}
-
-.json-table__key--level-3 {
-  padding-left: var(--json-table-indent-3);
-}
-
-.json-table__key--level-4 {
-  padding-left: var(--json-table-indent-4);
-}
-
-.json-table__key--level-5 {
-  padding-left: var(--json-table-indent-5);
-}
-
-/* Rainbow colors for nested groups */
 .json-table__key--group-level-1 {
   color: var(--json-table-rainbow-1);
   font-weight: var(--json-table-font-weight-bold);
@@ -250,7 +189,12 @@
   font-weight: var(--json-table-font-weight-bold);
 }
 
-/* Buttons */
+.json-table__key > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: var(--json-table-gap-xs);
+}
+
 .json-table__btn {
   background-color: var(--json-table-btn-bg);
   color: var(--json-table-btn-fg);
@@ -320,14 +264,6 @@
   border-color: var(--json-table-btn-danger);
 }
 
-/* Button container for edit and remove buttons */
-.json-table__key>div:last-child {
-  display: flex;
-  align-items: center;
-  gap: var(--json-table-gap-xs);
-}
-
-/* Edit Container and Input Styles */
 .json-table__edit-container {
   display: flex;
   align-items: center;
@@ -340,7 +276,6 @@
 .json-table__edit-input {
   flex: 1;
   min-width: 0;
-  /* Allow input to shrink */
   background-color: var(--vscode-input-background);
   border: 1px solid var(--vscode-input-border);
   border-radius: var(--json-table-radius-sm);
@@ -352,7 +287,6 @@
   transition: border-color var(--json-table-transition);
 }
 
-/* Placeholder text styling */
 .json-table__edit-input::placeholder {
   color: var(--vscode-input-placeholderForeground, rgba(255, 255, 255, 0.5));
   opacity: 1;
@@ -390,7 +324,6 @@
   align-items: center;
   gap: var(--json-table-gap-xs);
   flex-shrink: 0;
-  /* Prevent buttons from shrinking */
 }
 
 .json-table__edit-actions .json-table__btn {
@@ -403,7 +336,6 @@
   border-radius: var(--json-table-radius-sm);
 }
 
-/* Add Controls */
 .json-table__add-controls {
   display: flex;
   align-items: center;
@@ -415,23 +347,9 @@
   display: none;
   position: relative;
   align-items: center;
-  z-index: 1;
-  /* Ensure button is above table content */
+  z-index: 100;
   min-height: var(--json-table-btn-size-lg);
   justify-content: flex-start;
-}
-
-/* Show responsive version on small screens */
-@media (max-width: 48rem) {
-  .json-table__add-controls {
-    display: none;
-  }
-
-  .json-table__add-controls--responsive {
-    display: flex;
-    padding-right: var(--json-table-gap-sm);
-    margin-bottom: var(--json-table-gap-xs);
-  }
 }
 
 .json-table__add-controls--level-1,
@@ -459,7 +377,6 @@
   padding-left: var(--json-table-indent-5);
 }
 
-/* Single Add Button for responsive */
 .json-table__add-btn-single {
   background-color: var(--json-table-btn-bg);
   color: var(--json-table-btn-fg);
@@ -476,7 +393,7 @@
   justify-content: center;
   transition: background-color var(--json-table-transition);
   flex-shrink: 0;
-  z-index: 2;
+  z-index: 200;
   position: relative;
 }
 
@@ -484,7 +401,6 @@
   background-color: var(--json-table-btn-hover-bg);
 }
 
-/* Popup for responsive controls */
 .json-table__popup-overlay {
   position: fixed;
   top: 0;
@@ -492,23 +408,19 @@
   right: 0;
   bottom: 0;
   background: transparent;
-  z-index: 9999;
+  z-index: 99998;
 }
 
 .json-table__popup {
   position: fixed;
-  /* Changed from absolute to fixed */
   background-color: var(--json-table-popup-bg);
   border: 1px solid var(--json-table-popup-border);
   border-radius: var(--json-table-radius-md);
   box-shadow: 0 var(--json-table-gap-sm) var(--json-table-size-md) rgba(0, 0, 0, 0.3);
-  z-index: 10000;
+  z-index: 99999;
   min-width: calc(var(--json-table-size-base) * 7.5);
-  /* 120px */
   padding: var(--json-table-gap-sm);
-  /* Position will be set via JavaScript */
   max-width: calc(100vw - var(--json-table-size-base));
-  /* Prevent overflow */
 }
 
 .json-table__popup-item {
@@ -536,27 +448,53 @@
   margin-bottom: var(--json-table-gap-xs);
 }
 
-/* Container for horizontal scroll on small screens */
 .json-table-container {
   overflow-x: auto;
   width: 100%;
   position: relative;
-  /* Added for popup positioning context */
 }
 
-@media (max-width: 30rem) {
-  .json-table-container {
-    overflow-x: scroll;
-  }
+.json-table__add-controls--level-1 .json-table__add-controls--responsive { z-index: 101; }
+.json-table__add-controls--level-2 .json-table__add-controls--responsive { z-index: 102; }
+.json-table__add-controls--level-3 .json-table__add-controls--responsive { z-index: 103; }
+.json-table__add-controls--level-4 .json-table__add-controls--responsive { z-index: 104; }
+.json-table__add-controls--level-5 .json-table__add-controls--responsive { z-index: 105; }
 
-  .json-table {
-    min-width: 37.5rem;
-    /* 600px - Ensure minimum width for usability */
-  }
+.json-table__add-controls--responsive.json-table__add-controls--level-1 .json-table__add-btn-single { z-index: 201; }
+.json-table__add-controls--responsive.json-table__add-controls--level-2 .json-table__add-btn-single { z-index: 202; }
+.json-table__add-controls--responsive.json-table__add-controls--level-3 .json-table__add-btn-single { z-index: 203; }
+.json-table__add-controls--responsive.json-table__add-controls--level-4 .json-table__add-btn-single { z-index: 204; }
+.json-table__add-controls--responsive.json-table__add-controls--level-5 .json-table__add-btn-single { z-index: 205; }
+
+.json-table__cell .json-table__edit-container {
+  padding: var(--json-table-gap-sm);
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
-/* Responsive behavior */
+.json-table__cell[style*="padding: 0"] {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.json-table__cell[style*="padding: 0"] .json-table__edit-container {
+  padding: var(--json-table-gap-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+
 @media (max-width: 48rem) {
+  .json-table__add-controls {
+    display: none;
+  }
+
+  .json-table__add-controls--responsive {
+    display: flex;
+    padding-right: var(--json-table-gap-sm);
+    margin-bottom: var(--json-table-gap-xs);
+  }
+
   .json-table {
     font-size: var(--json-table-font-size-sm);
   }
@@ -564,6 +502,7 @@
   .json-table__header,
   .json-table__cell {
     padding: var(--json-table-gap-sm);
+    min-width: calc(var(--json-table-size-base) * 10);
   }
 
   .json-table__key {
@@ -579,14 +518,16 @@
     padding: var(--json-table-gap-xs);
     font-size: var(--json-table-font-size-xs);
   }
-
-  /* Ensure table cells don't overflow content */
-  .json-table__cell {
-    min-width: calc(var(--json-table-size-base) * 10); /* Minimum width for mobile */
-  }
 }
 
 @media (max-width: 30rem) {
+  .json-table-container {
+    overflow-x: scroll;
+  }
+
+  .json-table {
+    min-width: 37.5rem;
+  }
 
   .json-table__header,
   .json-table__cell {
@@ -597,155 +538,28 @@
     font-size: var(--json-table-font-size-xs);
   }
 
-  /* Reduce indentation on very small screens */
   .json-table__key--level-1,
   .json-table__add-controls--level-1 {
     padding-left: calc(var(--json-table-indent-1) * 0.6);
-    /* 15px */
   }
 
   .json-table__key--level-2,
   .json-table__add-controls--level-2 {
     padding-left: calc(var(--json-table-indent-1) * 1);
-    /* 25px */
   }
 
   .json-table__key--level-3,
   .json-table__add-controls--level-3 {
     padding-left: calc(var(--json-table-indent-1) * 1.4);
-    /* 35px */
   }
 
   .json-table__key--level-4,
   .json-table__add-controls--level-4 {
     padding-left: calc(var(--json-table-indent-1) * 1.8);
-    /* 45px */
   }
 
   .json-table__key--level-5,
   .json-table__add-controls--level-5 {
     padding-left: calc(var(--json-table-indent-1) * 2.2);
-    /* 55px */
-  }
-}
-
-/* Single add button for responsive mode */
-.json-table__add-btn-single {
-  background-color: var(--json-table-btn-bg);
-  color: var(--json-table-btn-fg);
-  border: none;
-  border-radius: var(--json-table-radius-md);
-  cursor: pointer;
-  font-family: var(--json-table-font-family);
-  font-size: var(--json-table-font-size-sm);
-  padding: var(--json-table-gap-sm) var(--json-table-gap-md);
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--json-table-gap-sm);
-  transition: background-color var(--json-table-transition);
-  min-width: var(--json-table-btn-size-lg);
-  min-height: var(--json-table-btn-size-lg);
-}
-
-.json-table__add-btn-single:hover {
-  background-color: var(--json-table-btn-hover-bg);
-}
-
-/* Specific styling for table cell with edit container */
-.json-table__cell .json-table__edit-container {
-  padding: var(--json-table-gap-sm);
-  margin: 0;
-  min-width: 0;
-  overflow: hidden;
-}
-
-/* Ensure input inherits proper theming */
-.json-table__edit-input {
-  background-color: var(--vscode-input-background);
-  border-color: var(--vscode-input-border);
-  color: var(--vscode-input-foreground);
-}
-
-.json-table__edit-input:focus {
-  border-color: var(--vscode-focusBorder, var(--json-table-btn-bg));
-  box-shadow: 0 0 0 1px var(--vscode-focusBorder, var(--json-table-btn-bg));
-}
-
-/* Table cell with no padding (edit mode) */
-.json-table__cell[style*="padding: 0"] {
-  padding: 0 !important;
-  overflow: hidden;
-}
-
-.json-table__cell[style*="padding: 0"] .json-table__edit-container {
-  padding: var(--json-table-gap-sm);
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Responsive Styles */
-@media (max-width: var(--json-table-breakpoint-sm)) {
-  .json-table {
-    font-size: var(--json-table-font-size-sm);
-  }
-
-  .json-table__header,
-  .json-table__cell {
-    padding: var(--json-table-padding);
-  }
-
-  .json-table__key--level-1,
-  .json-table__key--level-2,
-  .json-table__key--level-3,
-  .json-table__key--level-4,
-  .json-table__key--level-5 {
-    padding-left: var(--json-table-indent-1);
-  }
-
-  .json-table__add-controls {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .json-table__add-controls--level-1,
-  .json-table__add-controls--level-2,
-  .json-table__add-controls--level-3,
-  .json-table__add-controls--level-4,
-  .json-table__add-controls--level-5 {
-    padding-left: 0;
-  }
-}
-
-@media (max-width: var(--json-table-breakpoint-xs)) {
-  .json-table {
-    font-size: calc(var(--json-table-font-size-sm) - 1px);
-  }
-
-  .json-table__header,
-  .json-table__cell {
-    padding: calc(var(--json-table-padding) - 2px);
-  }
-
-  .json-table__key--level-1,
-  .json-table__key--level-2,
-  .json-table__key--level-3,
-  .json-table__key--level-4,
-  .json-table__key--level-5 {
-    padding-left: var(--json-table-indent-1);
-  }
-
-  .json-table__add-controls {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .json-table__add-controls--level-1,
-  .json-table__add-controls--level-2,
-  .json-table__add-controls--level-3,
-  .json-table__add-controls--level-4,
-  .json-table__add-controls--level-5 {
-    padding-left: 0;
   }
 }
