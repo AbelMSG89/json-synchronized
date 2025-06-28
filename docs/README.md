@@ -8,11 +8,11 @@ Complete documentation for the JSON Synchronizer VS Code extension.
 
 - [**Installation & Setup**](installation.md) - Installation and initial setup
 - [**Translation Features**](translation-features.md) - Automatic translation capabilities
-- [**Environment Configuration**](environment-configuration.md) - Environment variable configuration
+- [**Environment Configuration**](environment-configuration.md) - Env variable configuration
 
 ### ⚙️ Configuration
 
-- [**Translation Services Setup**](translation-services.md) - Translation service configuration
+- [**Translation Services Setup**](translation-services.md) - Translation configuration
 
 ### 🛠️ Development
 

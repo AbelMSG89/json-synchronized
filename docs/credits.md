@@ -35,17 +35,22 @@ This fork significantly extends the original functionality with:
 
 ### Translation Features
 
-- **Multiple Cloud Providers**: Support for Google Translate, Microsoft Translator, and Amazon Translate
-- **Smart Language Detection**: Automatic detection of source and target languages from file names
+- **Multiple Cloud Providers**: Support for Google Translate,
+  Microsoft Translator, and Amazon Translate
+- **Smart Language Detection**: Automatic detection of source and
+  target languages from file names
 - **One-Click Translation**: UI button for instant translation to multiple languages
-- **Placeholder Preservation**: Maintains formatting placeholders like `{0}`, `{1}` during translation
+- **Placeholder Preservation**: Maintains formatting placeholders like `{0}`,
+  `{1}` during translation
 
 ### Environment Management
 
 - **Custom .env File Support**: Load environment variables from custom .env files
 - **Flexible Path Configuration**: Support for relative and absolute paths
-- **Environment File Selection**: Command palette integration for easy .env file switching
-- **Multiple Environment Types**: Support for `.env.development`, `.env.production`, etc.
+- **Environment File Selection**: Command palette integration
+  for easy .env file switching
+- **Multiple Environment Types**: Support for `.env.development`,
+  `.env.production`, etc.
 
 ### Security Improvements
 
@@ -63,7 +68,8 @@ This fork significantly extends the original functionality with:
 
 We extend our gratitude to:
 
-- **oscar-green** for creating the original JSON Synchronizer extension that serves as the foundation
+- **oscar-green** for creating the original JSON Synchronizer extension
+  that serves as the foundation
 - **DionJChapman** for the translation service architecture and patterns
 - **Microsoft**, **Google**, and **Amazon** for providing translation APIs
 - **VS Code Team** for the excellent extension development platform
@@ -77,7 +83,8 @@ This project respects and maintains the original MIT licenses of both base proje
 - Translation service patterns: MIT License
 - This enhanced version: MIT License
 
-All original copyright notices and attributions are preserved in the respective code sections.
+All original copyright notices and attributions are preserved
+in the respective code sections.
 
 ## 🤝 Contributing to Credits
 

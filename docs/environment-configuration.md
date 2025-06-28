@@ -2,7 +2,9 @@
 
 ## Overview
 
-JSON Synchronizer supports flexible environment configuration for managing translation service credentials securely. You can use system environment variables, custom .env files, or a combination of both.
+JSON Synchronizer supports flexible environment configuration for managing
+translation service credentials securely. You can use system environment variables,
+custom .env files, or a combination of both.
 
 ## Supported Configuration Methods
 
@@ -74,14 +76,14 @@ Use the Command Palette for easy environment file management:
 
 ### Google Translate API
 
-#### Standard Variables
+#### Google Translate Standard Variables
 
 ```bash
 GOOGLE_API_KEY=your-google-cloud-api-key
 GOOGLE_CLOUD_PROJECT=your-google-cloud-project-id
 ```
 
-#### Custom Variables
+#### Google Translate Custom Variables
 
 ```bash
 JSON_SYNCHRONIZER_GOOGLE_KEY=your-api-key
@@ -90,14 +92,14 @@ JSON_SYNCHRONIZER_GOOGLE_PROJECT=your-project-id
 
 ### Microsoft Translator API
 
-#### Standard Variables
+#### Microsoft Standard Variables
 
 ```bash
 AZURE_TRANSLATOR_KEY=your-azure-translator-key
 AZURE_TRANSLATOR_REGION=your-azure-region
 ```
 
-#### Custom Variables
+#### Microsoft Custom Variables
 
 ```bash
 JSON_SYNCHRONIZER_MICROSOFT_KEY=your-translator-key
@@ -106,7 +108,7 @@ JSON_SYNCHRONIZER_MICROSOFT_REGION=your-region
 
 ### Amazon Translate API
 
-#### Standard Variables
+#### Amazon Standard Variables
 
 ```bash
 AWS_ACCESS_KEY_ID=your-aws-access-key-id
@@ -114,7 +116,7 @@ AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
 AWS_DEFAULT_REGION=your-aws-region
 ```
 
-#### Custom Variables
+#### Amazon Custom Variables
 
 ```bash
 JSON_SYNCHRONIZER_AMAZON_KEY=your-access-key-id
@@ -416,4 +418,5 @@ ENV JSON_SYNCHRONIZER_GOOGLE_KEY=${GOOGLE_API_KEY}
 ENV JSON_SYNCHRONIZER_GOOGLE_PROJECT=${GOOGLE_PROJECT}
 ```
 
-This configuration system provides maximum flexibility while maintaining security and ease of use.
+This configuration system provides maximum flexibility while maintaining security
+and ease of use.

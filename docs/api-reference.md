@@ -1,6 +1,7 @@
 # API Reference
 
-This document provides detailed API reference for JSON Synchronizer's translation services and configuration.
+This document provides detailed API reference for JSON Synchronizer's translation
+services and configuration.
 
 ## Translation Services
 
@@ -26,7 +27,8 @@ Translates text from source language to target language.
 
 - `text` (string): Text to translate
 - `targetLanguage` (string): Target language code (e.g., 'es', 'fr', 'de')
-- `sourceLanguage` (string, optional): Source language code. If not provided, service will attempt auto-detection
+- `sourceLanguage` (string, optional): Source language code.  
+  If not provided, service will attempt auto-detection
 
 **Returns:** `Promise<string>` - Translated text
 
@@ -203,7 +205,8 @@ Loads environment variables from specified .env file or default location.
 
 **Parameters:**
 
-- `filePath` (string, optional): Path to .env file. If not provided, loads from workspace root
+- `filePath` (string, optional): Path to .env file.  
+  If not provided, loads from workspace root
 
 **Returns:** `Promise<void>`
 
@@ -225,7 +228,8 @@ Gets environment variable value.
 
 ```json
 {
-  "json-synchronizer.translationService": "GoogleTranslator" | "MicrosoftTranslator" | "AmazonTranslator",
+  "json-synchronizer.translationService":
+    "GoogleTranslator" | "MicrosoftTranslator" | "AmazonTranslator",
   "json-synchronizer.defaultLanguage": "en",
   "json-synchronizer.envFilePath": "./path/to/.env"
 }

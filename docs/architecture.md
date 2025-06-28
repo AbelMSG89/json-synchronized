@@ -2,7 +2,9 @@
 
 ## Overview
 
-JSON Synchronizer is a VS Code extension built with TypeScript, React, and modern web technologies. The architecture follows a modular design with clear separation of concerns between the extension backend and webview frontend.
+JSON Synchronizer is a VS Code extension built with TypeScript, React, and modern
+web technologies. The architecture follows a modular design with clear separation
+of concerns between the extension backend and webview frontend.
 
 ## Technology Stack
 
@@ -14,7 +16,7 @@ JSON Synchronizer is a VS Code extension built with TypeScript, React, and moder
 - **ESBuild** - Fast bundling and compilation
 - **Node.js** - Runtime environment
 
-### Translation Services
+### Translation Service Providers
 
 - **Google Cloud Translation API** - Neural machine translation
 - **Microsoft Translator** - Azure Cognitive Services
@@ -139,19 +141,23 @@ Main components:
 
 ### Services Layer
 
-#### Translation Services
+#### Translation Services Layer
 
-- **TranslationService.ts** - Main orchestrator that routes requests to specific providers
-- **TranslationConfiguration.ts** - Manages configuration from VS Code settings and environment variables
-- **Individual Translators** - Provider-specific implementations (Google, Microsoft, Amazon)
+- **TranslationService.ts** - Main orchestrator that routes requests to
+  specific providers
+- **TranslationConfiguration.ts** - Manages configuration from VS Code settings
+  and environment variables
+- **Individual Translators** - Provider-specific implementations
 
 #### Environment Management
 
-- **EnvironmentLoader.ts** - Handles loading custom .env files and environment variable management
+- **EnvironmentLoader.ts** - Handles loading custom .env files and
+  environment variable management
 
 #### Data Management
 
-- **dataUtils.ts** - Utilities for language detection, placeholder preservation, and data manipulation
+- **dataUtils.ts** - Utilities for language detection, placeholder preservation,
+  and data manipulation
 - **tableRowGenerator.ts** - Generates table rows from JSON data structures
 
 ## Data Flow
@@ -341,4 +347,5 @@ npm run package  # Type check + lint + optimized build
 - **ESLint** - Code quality and style enforcement
 - **npm-run-all** - Parallel script execution
 
-This architecture provides a solid foundation for the extension while maintaining flexibility for future enhancements and third-party integrations.
+This architecture provides a solid foundation for the extension while maintaining
+flexibility for future enhancements and third-party integrations.

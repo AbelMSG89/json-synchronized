@@ -4,7 +4,8 @@
 
 - **VS Code**: Version 1.93.0 or higher
 - **Node.js**: Version 16.x or higher (for development)
-- **Translation Services** (optional): API keys for Google, Microsoft, or Amazon translation services
+- **Translation Services** (optional): API keys for Google, Microsoft, or Amazon
+  translation services
 
 ## Installation
 
@@ -58,7 +59,8 @@ After installation, you should see the JSON Synchronizer command available:
 
 ## Translation Setup (Optional)
 
-To enable automatic translation features, you'll need to configure a translation service:
+To enable automatic translation features, you'll need to configure a
+translation service:
 
 ### Quick Setup with Default .env
 

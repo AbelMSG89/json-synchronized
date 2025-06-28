@@ -3,10 +3,7 @@ dist
 node_modules
 .vscode-test/
 *.vsix
-.vscode/
 .DS_Store
-
-# Environment variables (keep credentials secure)
 .env
 .env.local
 .env.*.local

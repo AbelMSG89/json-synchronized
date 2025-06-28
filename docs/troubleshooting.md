@@ -50,7 +50,8 @@ This guide helps you resolve common issues with JSON Synchronizer.
 
 **Solution:**
 
-1. Use `JSON Synchronizer: Select Environment File` command to select the correct .env file
+1. Use `JSON Synchronizer: Select Environment File` command to select the
+   correct .env file
 2. Ensure .env file is readable and properly formatted:
 
    ```bash
@@ -71,7 +72,8 @@ This guide helps you resolve common issues with JSON Synchronizer.
 
 **Solution:**
 
-1. Use the Command Palette command `JSON Synchronizer: Select Environment File` to browse and select your .env file
+1. Use the Command Palette command `JSON Synchronizer: Select Environment File`
+   to browse and select your .env file
 2. Check if the file exists in the expected location
 3. For relative paths, ensure they're relative to the workspace root
 4. Use absolute paths if you're unsure about relative path resolution
@@ -102,7 +104,8 @@ This guide helps you resolve common issues with JSON Synchronizer.
 
 **Solution:**
 
-1. Rename files to include standard language codes (e.g., `en.json`, `es-ES.json`, `fr_FR.json`)
+1. Rename files to include standard language codes
+   (e.g., `en.json`, `es-ES.json`, `fr_FR.json`)
 2. Supported patterns:
    - `en.json` (language only)
    - `en-US.json` (language-country)
@@ -122,14 +125,16 @@ This guide helps you resolve common issues with JSON Synchronizer.
 **Solution:**
 
 1. Consider splitting large JSON files into smaller, more focused files
-2. Limit translation batch sizes by translating individual fields rather than bulk operations
+2. Limit translation batch sizes by translating individual fields rather
+   than bulk operations
 3. Use local caching by avoiding redundant translations
 
 ## Error Messages
 
 ### "Translation service not configured"
 
-Configure a translation service in VS Code settings or environment variables. See [Translation Services](./translation-services.md) for setup instructions.
+Configure a translation service in VS Code settings or environment variables.
+See [Translation Services](./translation-services.md) for setup instructions.
 
 ### "No valid translation target languages found"
 
@@ -137,11 +142,13 @@ Ensure you have multiple JSON files with different language codes in your worksp
 
 ### "Failed to load environment file"
 
-Check that your .env file path is correct and the file is readable. Use the Command Palette to select the file if needed.
+Check that your .env file path is correct and the file is readable.
+Use the Command Palette to select the file if needed.
 
 ### "API rate limit exceeded"
 
-You've exceeded your translation service's rate limits. Wait before trying again or upgrade your API plan.
+You've exceeded your translation service's rate limits. Wait before trying again
+or upgrade your API plan.
 
 ### "Invalid API credentials"
 
@@ -151,10 +158,14 @@ Check your API keys and ensure they're correctly configured with appropriate per
 
 If you're still experiencing issues:
 
-1. **Check the Output Panel**: Go to `View > Output` and select "JSON Synchronizer" to see detailed logs
-2. **Enable Debug Mode**: Add `"json-synchronizer.debug": true` to your VS Code settings for verbose logging
-3. **Check Developer Console**: Use `Help > Toggle Developer Tools` to see JavaScript errors
-4. **Review Configuration**: Verify all settings in `File > Preferences > Settings` under "JSON Synchronizer"
+1. **Check the Output Panel**: Go to `View > Output` and select "JSON Synchronizer"
+   to see detailed logs
+2. **Enable Debug Mode**: Add `"json-synchronizer.debug": true` to your
+   VS Code settings for verbose logging
+3. **Check Developer Console**: Use `Help > Toggle Developer Tools` to
+   see JavaScript errors
+4. **Review Configuration**: Verify all settings in `File > Preferences > Settings`
+   under "JSON Synchronizer"
 
 ## Reporting Issues
 

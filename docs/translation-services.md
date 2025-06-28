@@ -2,17 +2,18 @@
 
 ## Overview
 
-This guide provides step-by-step instructions for setting up translation services with JSON Synchronizer. Each service has different requirements and pricing models.
+This guide provides step-by-step instructions for setting up translation services
+with JSON Synchronizer. Each service has different requirements and pricing models.
 
 ## Google Cloud Translation API
 
-### Prerequisites
+### Google Cloud Prerequisites
 
 - Google Cloud Platform account
 - Billing enabled on your project
 - Cloud Translation API enabled
 
-### Setup Steps
+### Google Cloud Setup Steps
 
 1. **Create a Google Cloud Project**
    - Go to [Google Cloud Console](https://console.cloud.google.com/)
@@ -53,7 +54,7 @@ This guide provides step-by-step instructions for setting up translation service
    }
    ```
 
-### Pricing
+### Google Cloud Translation API Pricing
 
 - **Free Tier**: 500,000 characters per month
 - **Paid**: $20 per 1M characters
@@ -61,12 +62,12 @@ This guide provides step-by-step instructions for setting up translation service
 
 ## Microsoft Translator (Azure)
 
-### Prerequisites
+### Microsoft Azure Prerequisites
 
 - Microsoft Azure account
 - Active Azure subscription
 
-### Setup Steps
+### Microsoft Setup Steps
 
 1. **Create Translator Resource**
    - Go to [Azure Portal](https://portal.azure.com/)
@@ -108,7 +109,7 @@ This guide provides step-by-step instructions for setting up translation service
    }
    ```
 
-### Pricing
+### Microsoft Translator Pricing
 
 - **Free Tier**: 2M characters per month
 - **Paid**: $10 per 1M characters
@@ -116,13 +117,13 @@ This guide provides step-by-step instructions for setting up translation service
 
 ## Amazon Translate (AWS)
 
-### Prerequisites
+### Amazon Prerequisites
 
 - AWS account
 - AWS CLI configured (optional)
 - IAM user with appropriate permissions
 
-### Setup Steps
+### Amazon Setup Steps
 
 1. **Create IAM User**
    - Go to [AWS Console](https://console.aws.amazon.com/)
@@ -180,7 +181,7 @@ This guide provides step-by-step instructions for setting up translation service
    }
    ```
 
-### Pricing
+### Amazon Translate Pricing
 
 - **Free Tier**: 2M characters per month (first 12 months)
 - **Paid**: $15 per 1M characters

@@ -1,6 +1,7 @@
 # Contributing to JSON Synchronizer
 
-Thank you for your interest in contributing to JSON Synchronizer! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to JSON Synchronizer!  
+This document provides guidelines and information for contributors.
 
 ## 🚀 Getting Started
 
@@ -9,7 +10,7 @@ Thank you for your interest in contributing to JSON Synchronizer! This document 
 - **Node.js** 16.x or higher
 - **VS Code** 1.93.0 or higher
 - **Git** for version control
-- **npm** or **yarn** for dependency management
+- **npm** for dependency management
 
 ### Development Setup
 
@@ -156,7 +157,7 @@ We welcome code contributions! Here's how:
 
    ```bash
    git add .
-   git commit -m "feat: add new translation service support"
+   git commit -m "add new translation service support"
    ```
 
 5. **Push and create PR**
@@ -182,7 +183,9 @@ interface TranslationRequest {
   targetLanguages: string[];
 }
 
-async function translateText(request: TranslationRequest): Promise<TranslationResponse> {
+async function translateText(
+  request: TranslationRequest
+): Promise<TranslationResponse> {
   // Implementation
 }
 
@@ -383,7 +386,8 @@ We use labels to organize issues:
 
 ## 📄 License
 
-By contributing, you agree that your contributions will be licensed under the same license as the project (MIT License).
+By contributing, you agree that your contributions will be licensed under the same
+license as the project (MIT License).
 
 ## 🙏 Recognition
 

@@ -1,23 +1,27 @@
 <h1 align="center">
-  <p>
-    <img src="./media/logo.png" width="94">
-  </p>
+  <img src="./media/logo.png" width="94" alt="JSON Synchronizer Logo">
   JSON Synchronizer
-  <p align="center">
+  <div align="center">
     <a href="https://marketplace.visualstudio.com/items?itemName=AbelMSG89.json-synchronizer">
-      <img 
+      <img
         src="https://img.shields.io/visual-studio-marketplace/v/AbelMSG89.json-synchronizer?color=blue&amp;label=JSON%20Synchronizer&logo=visual-studio-code"
         alt="Visual Studio Marketplace Version"
       />
     </a>
-  </p>
+  </div>
 </h1>
 
-JSON Synchronizer allows simultaneous editing of multiple JSON files with enhanced translation capabilities. Each file must contain a single object, which can include nested objects and strings. Perfect for i18n management and multilingual projects.
+JSON Synchronizer allows simultaneous editing of multiple JSON files with
+enhanced translation capabilities. Each file must contain a single object,
+which can include nested objects and strings. Perfect for i18n management and
+multilingual projects.
 
 ## 🎯 About This Project
 
-This extension is based on the excellent work of [oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer) and incorporates translation service patterns from [DionJChapman/Localization-Internationalization-Editor](https://github.com/DionJChapman/Localization-Internationalization-Editor). 
+This extension is based on the excellent work of
+[oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer)
+and incorporates translation service patterns from
+[DionJChapman/Localization-Internationalization-Editor](https://github.com/DionJChapman/Localization-Internationalization-Editor).
 
 **Enhanced with:**
 
@@ -28,7 +32,8 @@ This extension is based on the excellent work of [oscar-green/json-synchronizer]
 
 ## 🌍 Translation Support
 
-JSON Synchronizer now includes automatic translation support using leading cloud translation services:
+JSON Synchronizer now includes automatic translation support using leading
+cloud translation services:
 
 - **Microsoft Translator** - Azure Cognitive Services
 - **Google Translate** - Google Cloud Translation API  
@@ -36,15 +41,23 @@ JSON Synchronizer now includes automatic translation support using leading cloud
 
 ### Features
 
-- 🌐 **Smart Language Detection** - Automatically detects source and target languages from file names
-- 🔄 **One-Click Translation** - Translate text to multiple languages with a single click
-- 🔧 **Multiple Services** - Support for Microsoft, Google, and Amazon translation APIs
-- 📝 **Placeholder Preservation** - Maintains placeholder text like `{0}`, `{1}` during translation
-- ⚡ **Real-time Updates** - Translated content is immediately applied to all target files
+- 🌐 **Smart Language Detection** - Automatically detects source and target
+  languages from file names
+- 🔄 **One-Click Translation** - Translate text to multiple languages  
+  with a single click
+- 🔧 **Multiple Services** - Support for Microsoft, Google, and Amazon  
+  translation APIs
+- 📝 **Placeholder Preservation** - Maintains placeholder text like `{0}`,
+  `{1}` during translation
+- ⚡ **Real-time Updates** - Translated content is immediately applied to all
+  target files
 
 ### Configuration
 
-To enable translation features, configure one of the supported translation services. **For security, it's recommended to use environment variables instead of storing credentials in VS Code settings.**
+To enable translation features, configure one of the supported translation
+services.  
+**For security, it's recommended to use environment variables instead of storing
+credentials in VS Code settings.**
 
 #### Using Environment Variables (Recommended)
 
@@ -58,7 +71,8 @@ Set the appropriate environment variables for your chosen service. You can use:
 
 1. Copy `.env.example` to `.env` (default) or your preferred file (e.g., `.env.development`)
 2. Add your API credentials to the file
-3. For custom files: Use Command Palette: `JSON Synchronizer: Select Environment File`
+3. For custom files: Use Command Palette:  
+   `JSON Synchronizer: Select Environment File`
 4. For default `.env`: Just place it in your workspace root - it will be loaded automatically
 
 **Supported .env file paths:**
@@ -124,15 +138,21 @@ Then configure only the service in VS Code settings:
 ```json
 {
   "json-synchronizer.translationService": "AmazonTranslator",
-  "json-synchronizer.translationServiceAmazon": ["your-access-key", "your-secret-key", "your-region"]
+  "json-synchronizer.translationServiceAmazon": [
+    "your-access-key",
+    "your-secret-key",
+    "your-region"
+  ]
 }
 ```
 
 ### Usage
 
-1. **Open JSON Synchronizer** on a folder containing JSON files with language codes (e.g., `en.json`, `es.json`, `fr.json`)
+1. **Open JSON Synchronizer** on a folder containing JSON files with language
+   codes (e.g., `en.json`, `es.json`, `fr.json`)
 2. **Enter text** in any field that contains content
-3. **Click the translation button** (🌐) that appears when hovering over cells with content
+3. **Click the translation button** (🌐) that appears when hovering over cells  
+   with content
 4. **Watch as translations** are automatically applied to all other language files
 
 The translation button will only appear when:
@@ -141,10 +161,11 @@ The translation button will only appear when:
 - There are other language files to translate to
 - A translation service is properly configured
 
-## Features
+## 🛠️ Key Features
 
 <div align="center">
-  Right click on a folder and click "Synchronize JSON" to open all JSON files in the file structure below.<br>
+Right click on a folder and click "Synchronize JSON" to open all JSON files in the
+file structure below. <br>
 
 ![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/folder-click.gif?raw=true)
 
@@ -172,14 +193,16 @@ This project builds upon the foundation of excellent open-source work:
 
 ### Original Project
 
-- **[oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer)** - Original JSON Synchronizer extension
+- **[oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer)**
+  - Original JSON Synchronizer extension
   - Core JSON synchronization functionality
   - File watching and real-time updates
   - Table-based editing interface
 
 ### Translation Service Implementation
 
-- **[DionJChapman/Localization-Internationalization-Editor](https://github.com/DionJChapman/Localization-Internationalization-Editor)** - Translation service patterns
+- **[DionJChapman/Localization-Internationalization-Editor](https://github.com/DionJChapman/Localization-Internationalization-Editor)**
+  - Translation service patterns
   - Translation service architecture
   - API integration patterns
   - Configuration management concepts
@@ -187,18 +210,23 @@ This project builds upon the foundation of excellent open-source work:
 ### Enhancements in This Fork
 
 - ✨ **Enhanced Translation Support** - Multiple cloud translation providers
-- 🔧 **Advanced Environment Management** - Custom .env file support with workspace integration
+- 🔧 **Advanced Environment Management** - Custom .env file support with workspace
+  integration
 - 🌐 **Smart Language Detection** - Automatic source/target language detection
 - 📁 **Flexible Configuration** - Command palette integration for .env file selection
-- 🔒 **Security Improvements** - Better credential management and environment variable support
+- 🔒 **Security Improvements** - Better credential management and environment
+  variable support
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+Contributions are welcome! Please read our
+[Contributing Guide](./CONTRIBUTING.md) for details on our code of conduct and
+the process for submitting pull requests.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License.  
+See the [LICENSE](./LICENSE) file for details.
 
 ## 🔗 Links
 

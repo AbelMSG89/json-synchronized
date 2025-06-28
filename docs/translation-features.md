@@ -2,7 +2,9 @@
 
 ## Overview
 
-JSON Synchronizer provides powerful automatic translation capabilities using multiple cloud translation services. Translate your JSON content to multiple languages with a single click while preserving formatting and placeholders.
+JSON Synchronizer provides powerful automatic translation capabilities using
+multiple cloud translation services. Translate your JSON content to multiple
+languages with a single click while preserving formatting and placeholders.
 
 ## Supported Translation Services
 
@@ -233,7 +235,8 @@ Translation preserves placeholders:
 
 ### Custom Language Mapping
 
-For non-standard file naming, you can configure custom language detection patterns in your workspace settings.
+For non-standard file naming, you can configure custom language detection patterns
+in your workspace settings.
 
 ### Batch Translation
 
@@ -259,13 +262,13 @@ JSON Synchronizer can integrate with:
 - **Pricing**: $20 per 1M characters
 - **Rate Limits**: 100 requests/second
 
-### Microsoft Translator
+### Microsoft Translator Pricing
 
 - **Free Tier**: 2M characters/month
 - **Pricing**: $10 per 1M characters
 - **Rate Limits**: Varies by subscription
 
-### Amazon Translate
+### Amazon Translate Pricing
 
 - **Free Tier**: 2M characters/month (first year)
 - **Pricing**: $15 per 1M characters
