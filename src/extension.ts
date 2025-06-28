@@ -1,8 +1,23 @@
 import * as vscode from "vscode";
 import fsPromise from "fs/promises";
 import fs from "fs";
+import { TranslationService } from "./services/TranslationService";
+import { EnvironmentLoader } from "./services/EnvironmentLoader";
 
 export function activate(context: vscode.ExtensionContext) {
+  // Load custom environment file on activation
+  EnvironmentLoader.loadCustomEnvFile();
+
+  // Listen for configuration changes to reload environment file
+  const configChangeListener = vscode.workspace.onDidChangeConfiguration(
+    (e) => {
+      if (e.affectsConfiguration("json-synchronizer.envFilePath")) {
+        EnvironmentLoader.loadCustomEnvFile();
+      }
+    },
+  );
+  context.subscriptions.push(configChangeListener);
+
   const disposable = vscode.commands.registerCommand(
     "json-synchronizer.synchronize",
     async (uri) => {
@@ -13,7 +28,14 @@ export function activate(context: vscode.ExtensionContext) {
     },
   );
 
-  context.subscriptions.push(disposable);
+  const selectEnvFileCommand = vscode.commands.registerCommand(
+    "json-synchronizer.selectEnvFile",
+    async () => {
+      await selectEnvironmentFile();
+    },
+  );
+
+  context.subscriptions.push(disposable, selectEnvFileCommand);
 }
 
 export function deactivate() {}
@@ -167,11 +189,103 @@ async function createWebviewPanel(
             renameKey(message.oldPath, message.newKey, fileUri);
           });
           break;
+        case "translate":
+          if (
+            message.text &&
+            message.sourceLanguage &&
+            message.targetLanguages
+          ) {
+            await handleTranslation(
+              message.key!,
+              message.text,
+              message.sourceLanguage,
+              message.targetLanguages,
+            );
+          }
+          break;
       }
     },
     undefined,
     context.subscriptions,
   );
+
+  async function handleTranslation(
+    keyPath: string[],
+    sourceText: string,
+    sourceLanguage: string,
+    targetLanguages: string[],
+  ) {
+    // Ensure environment is loaded before translation
+    EnvironmentLoader.loadCustomEnvFile();
+
+    if (!TranslationService.hasTranslationService()) {
+      vscode.window.showWarningMessage(
+        "No translation service configured. Please configure a translation service in settings.",
+      );
+      return;
+    }
+
+    try {
+      // Show progress indicator
+      const translations = await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: "Translating...",
+          cancellable: false,
+        },
+        async (progress) => {
+          progress.report({ message: "Processing translation request..." });
+
+          const result = await TranslationService.translateText(
+            sourceText,
+            sourceLanguage,
+            targetLanguages,
+          );
+
+          if (Object.keys(result).length === 0) {
+            throw new Error("No translations received");
+          }
+
+          progress.report({ message: "Applying translations to files..." });
+
+          // Apply translations to files
+          for (const [targetLanguage, translatedText] of Object.entries(
+            result,
+          )) {
+            // Find the file index for this target language
+            const targetFileIndex = fileUris.findIndex((uri) => {
+              const fileName = getFileName(baseUriPath, uri);
+              const fileLanguage = fileName.split("/")[0].toLowerCase();
+              return fileLanguage === targetLanguage;
+            });
+
+            if (targetFileIndex !== -1) {
+              const targetFileUri = fileUris[targetFileIndex];
+              await update(keyPath, targetFileUri, {
+                command: "edit",
+                key: keyPath,
+                fileIndex: targetFileIndex,
+                newValue: translatedText,
+              });
+            }
+          }
+
+          // Refresh the webview
+          panel.webview.postMessage({ type: "json", data: uriData });
+
+          return result;
+        },
+      );
+
+      vscode.window.showInformationMessage(
+        `Successfully translated to ${Object.keys(translations).length} language(s)`,
+      );
+    } catch (error) {
+      vscode.window.showErrorMessage(
+        `Translation failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
 
   async function deleteKey(parts: string[], fileUri: vscode.Uri) {
     const filePath = fileUri.fsPath;
@@ -397,4 +511,67 @@ function getFileName(baseUriPath: string, uri: vscode.Uri) {
   const withoutExtension = cleanPath.replace(/\.json$/, "");
 
   return withoutExtension;
+}
+
+/**
+ * Show a quick pick to select an environment file
+ */
+async function selectEnvironmentFile() {
+  try {
+    const availableFiles = await EnvironmentLoader.getAvailableEnvFiles();
+
+    if (availableFiles.length === 0) {
+      vscode.window.showInformationMessage(
+        "No .env files found in the workspace. You can create one or set a custom path in settings.",
+      );
+      return;
+    }
+
+    const items = [
+      {
+        label: "$(clear-all) None (use system environment)",
+        description: "Use system environment variables",
+        detail: "Clear custom environment file setting",
+        envPath: "",
+      },
+      ...availableFiles.map((file) => ({
+        label: `$(file-text) ${file}`,
+        description: `Environment file`,
+        detail: `Use ${file} for environment variables`,
+        envPath: file,
+      })),
+    ];
+
+    const selected = await vscode.window.showQuickPick(items, {
+      placeHolder: "Select an environment file to use",
+      title: "JSON Synchronizer - Environment File",
+    });
+
+    if (selected !== undefined) {
+      // Update the configuration
+      const config = vscode.workspace.getConfiguration();
+      await config.update(
+        "json-synchronizer.envFilePath",
+        selected.envPath,
+        vscode.ConfigurationTarget.Workspace,
+      );
+
+      // Load the new environment file
+      EnvironmentLoader.loadCustomEnvFile();
+
+      if (selected.envPath) {
+        vscode.window.showInformationMessage(
+          `Environment file set to: ${selected.envPath}`,
+        );
+      } else {
+        vscode.window.showInformationMessage(
+          "Environment file cleared. Using system environment variables.",
+        );
+      }
+    }
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      `Error selecting environment file: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
 }

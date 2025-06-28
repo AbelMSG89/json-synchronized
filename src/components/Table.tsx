@@ -6,10 +6,15 @@ import {
   getLevelClass,
   getGroupColorLevel,
   sendVSCodeMessage,
+  detectDefaultLanguage,
+  extractLanguageFromFileName,
+  getOtherLanguages,
+  hasContentToTranslate,
 } from "../utils/dataUtils";
 import { generateTableRows } from "../utils/tableRowGenerator";
 import { useKeyEditing } from "../hooks/useJSONSynchronizer";
 import { AddNewKey } from "./AddNewKey";
+import { TranslationButton } from "./TranslationButton";
 import { EditIcon, DeleteIcon, CloseIcon, CheckIcon } from "./Icons";
 
 export const Table: React.FC<TableProps> = ({
@@ -200,6 +205,12 @@ export const Table: React.FC<TableProps> = ({
     }
 
     if (row.type === "field") {
+      // Translation logic
+      const defaultLanguage = detectDefaultLanguage(fileNames);
+      const hasTranslatableContent = row.cellData
+        ? hasContentToTranslate(row.cellData)
+        : false;
+
       const rowCells = row.cellData?.map((cellData, index) => {
         if (cellData.hasError) {
           return null;
@@ -209,33 +220,60 @@ export const Table: React.FC<TableProps> = ({
           ? "json-table__cell json-table__cell--missing"
           : "json-table__cell";
 
+        const currentFileName = fileNames[index];
+        const currentLanguage = extractLanguageFromFileName(currentFileName);
+        const isDefaultLanguage = currentLanguage === defaultLanguage;
+        const otherLanguages = getOtherLanguages(fileNames, currentLanguage);
+
+        // Show translate button only if:
+        // 1. This cell has content to translate
+        // 2. There are other languages to translate to
+        // 3. This is not an empty cell
+        const showTranslateButton =
+          !cellData.isEmpty &&
+          !cellData.hasError &&
+          cellData.value.trim().length > 0 &&
+          otherLanguages.length > 0;
+
         return (
-          <td
-            key={index}
-            className={cellClass}
-            contentEditable
-            suppressContentEditableWarning
-            onFocus={(e) => {
-              e.currentTarget.setAttribute(
-                "data-original",
-                e.currentTarget.innerText,
-              );
-            }}
-            onBlur={(e) => {
-              const originalValue =
-                e.currentTarget.getAttribute("data-original") || "";
-              const newValue = e.currentTarget.innerText;
-              if (newValue !== originalValue) {
-                handleEdit("edit", row.path, index, newValue);
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                (e.target as HTMLInputElement).blur();
-              }
-            }}
-          >
-            {cellData.value}
+          <td key={index} className={cellClass}>
+            <div className="json-table__cell-content">
+              <div
+                className="json-table__cell-text"
+                contentEditable
+                suppressContentEditableWarning
+                onFocus={(e) => {
+                  e.currentTarget.setAttribute(
+                    "data-original",
+                    e.currentTarget.innerText,
+                  );
+                }}
+                onBlur={(e) => {
+                  const originalValue =
+                    e.currentTarget.getAttribute("data-original") || "";
+                  const newValue = e.currentTarget.innerText;
+                  if (newValue !== originalValue) {
+                    handleEdit("edit", row.path, index, newValue);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
+              >
+                {cellData.value}
+              </div>
+              {showTranslateButton && (
+                <TranslationButton
+                  path={row.path}
+                  sourceText={cellData.value}
+                  sourceLanguage={currentLanguage}
+                  targetLanguages={otherLanguages}
+                  isVisible={true}
+                />
+              )}
+            </div>
           </td>
         );
       });

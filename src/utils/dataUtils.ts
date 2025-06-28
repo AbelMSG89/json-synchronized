@@ -1,4 +1,4 @@
-import { JSONData, TableRow, CellData, VSCodeMessage } from "../types";
+import { JSONData, CellData, VSCodeMessage } from "../types";
 
 declare function acquireVsCodeApi(): any;
 const vscode = acquireVsCodeApi();
@@ -62,7 +62,7 @@ export const getAllKeys = (dataArray: JSONData[]): Set<string> => {
 };
 
 export const getGroupColorLevel = (depth: number): number => {
-  return (depth % 3) + 1; // Cycle through 3 colors: 1, 2, 3, 1, 2, 3...
+  return (depth % 3) + 1;
 };
 
 export const getLevelClass = (depth: number): string => {
@@ -71,4 +71,48 @@ export const getLevelClass = (depth: number): string => {
 
 export const getAddControlsLevelClass = (depth: number): string => {
   return `json-table__add-controls--level-${Math.min(depth + 1, 5)}`;
+};
+
+export const extractLanguageFromFileName = (fileName: string): string => {
+  // Extract language code from file names like 'en', 'es', 'fr', 'en-US', 'pt-BR', etc.
+  // Handle file names like 'en/comments', 'en-US/messages', etc.
+  const parts = fileName.split("/");
+  const langPart = parts[0];
+
+  // Remove any suffixes and get the language code
+  return langPart.toLowerCase();
+};
+
+export const detectDefaultLanguage = (fileNames: string[]): string => {
+  // Common default language patterns
+  const defaultPatterns = ["en", "english", "default", "base"];
+
+  for (const pattern of defaultPatterns) {
+    const found = fileNames.find((name) =>
+      extractLanguageFromFileName(name).startsWith(pattern),
+    );
+    if (found) {
+      return extractLanguageFromFileName(found);
+    }
+  }
+
+  // If no common pattern found, return the first file's language
+  return fileNames.length > 0
+    ? extractLanguageFromFileName(fileNames[0])
+    : "en";
+};
+
+export const getOtherLanguages = (
+  fileNames: string[],
+  excludeLanguage: string,
+): string[] => {
+  return fileNames
+    .map((name) => extractLanguageFromFileName(name))
+    .filter((lang) => lang !== excludeLanguage);
+};
+
+export const hasContentToTranslate = (cellData: CellData[]): boolean => {
+  return cellData.some(
+    (cell) => !cell.isEmpty && !cell.hasError && cell.value.trim().length > 0,
+  );
 };

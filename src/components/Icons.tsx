@@ -8,6 +8,7 @@ import {
   Folder,
   FolderOpen,
   FileText,
+  Languages,
 } from "lucide-react";
 
 interface IconProps {
@@ -47,3 +48,8 @@ export const FolderOpenIcon: React.FC<IconProps> = ({
 export const FileIcon: React.FC<IconProps> = ({ size = 16, className }) => (
   <FileText size={size} className={className} />
 );
+
+export const TranslateIcon: React.FC<IconProps> = ({
+  size = 12,
+  className,
+}) => <Languages size={size} className={className} />;

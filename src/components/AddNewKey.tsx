@@ -29,10 +29,8 @@ export const AddNewKey: React.FC<AddNewKeyProps> = ({
   const submit = () => {
     const value = contentEditableRef.current?.value || "";
 
-    // Validar que el campo no esté vacío
     if (value.trim() === "") {
       setHasError(true);
-      // Mostrar alerta
       const message =
         editMode === EditMode.GROUP
           ? "Group name cannot be empty"

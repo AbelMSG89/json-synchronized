@@ -28,10 +28,92 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "JSON Synchronizer",
+      "properties": {
+        "json-synchronizer.translationService": {
+          "type": "string",
+          "enum": [
+            "",
+            "MicrosoftTranslator",
+            "GoogleTranslator",
+            "AmazonTranslator"
+          ],
+          "default": "",
+          "description": "Translation service to use for automatic translations"
+        },
+        "json-synchronizer.translationServiceApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for the translation service"
+        },
+        "json-synchronizer.translationServiceApiSecret": {
+          "type": "string",
+          "default": "",
+          "description": "API secret for the translation service (required for Amazon)"
+        },
+        "json-synchronizer.translationServiceApiRegion": {
+          "type": "string",
+          "default": "",
+          "description": "API region for the translation service"
+        },
+        "json-synchronizer.translationServiceAmazon": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "",
+            "",
+            ""
+          ],
+          "description": "Amazon Translate API settings [apiKey, apiSecret, apiRegion]"
+        },
+        "json-synchronizer.translationServiceGoogle": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "",
+            "",
+            ""
+          ],
+          "description": "Google Translate API settings [apiKey, apiSecret, projectId]"
+        },
+        "json-synchronizer.translationServiceMicrosoft": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "",
+            "",
+            ""
+          ],
+          "description": "Microsoft Translate API settings [apiKey, apiSecret, apiRegion]"
+        },
+        "json-synchronizer.defaultLanguage": {
+          "type": "string",
+          "default": "en",
+          "description": "Default language code for translations"
+        },
+        "json-synchronizer.envFilePath": {
+          "type": "string",
+          "default": "",
+          "description": "Custom path to environment file (e.g., '.env.development', '.env.production', '/absolute/path/to/.env'). Supports relative paths from workspace root and absolute paths. If empty, uses .env file from workspace root or system environment variables."
+        }
+      }
+    },
     "commands": [
       {
         "command": "json-synchronizer.synchronize",
         "title": "Synchronize JSON"
+      },
+      {
+        "command": "json-synchronizer.selectEnvFile",
+        "title": "Select Environment File",
+        "category": "JSON Synchronizer"
       }
     ],
     "menus": {
@@ -62,11 +144,16 @@
     "build": "node esbuild.js"
   },
   "dependencies": {
+    "@google-cloud/translate": "^8.5.1",
+    "aws4": "^1.13.2",
+    "axios": "^1.10.0",
+    "dotenv": "^17.0.0",
     "lucide-react": "^0.525.0",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@types/aws4": "^1.11.6",
     "@types/mocha": "^10.0.7",
     "@types/node": "20.x",
     "@types/react": "18.3.5",

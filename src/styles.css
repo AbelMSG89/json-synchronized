@@ -97,6 +97,19 @@
   position: relative;
 }
 
+.json-table__cell-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--json-table-gap-xs);
+}
+
+.json-table__cell-text {
+  flex-grow: 1;
+  min-width: 0;
+  outline: none;
+}
+
 .json-table__cell--missing {
   background-color: var(--json-table-missing-bg);
 }
@@ -311,8 +324,35 @@
 }
 
 .json-table__remove-btn:hover {
-  background-color: var(--json-table-btn-danger-hover);
+  background-color: var(--json-table-btn-danger);
   border-color: var(--json-table-btn-danger);
+}
+
+.json-table__translate-btn {
+  visibility: hidden;
+  background-color: transparent;
+  color: var(--vscode-terminal-ansiBlue, #3794ff);
+  border: 2px solid var(--vscode-terminal-ansiBlue, #3794ff);
+  border-radius: var(--json-table-radius-sm);
+  padding: var(--json-table-gap-xs);
+  font-size: var(--json-table-font-size-xs);
+  cursor: pointer;
+  transition: all var(--json-table-transition);
+  min-width: var(--json-table-btn-size-sm);
+  min-height: var(--json-table-btn-size-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.json-table__translate-btn:hover {
+  background-color: var(--vscode-terminal-ansiBlue, #3794ff);
+  color: white;
+}
+
+.json-table__cell:hover .json-table__translate-btn {
+  visibility: visible;
 }
 
 .json-table__edit-container {

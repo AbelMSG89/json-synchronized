@@ -58,4 +58,7 @@ export interface VSCodeMessage {
   newValue?: string;
   oldPath?: string[];
   newKey?: string;
+  sourceLanguage?: string;
+  targetLanguages?: string[];
+  text?: string;
 }

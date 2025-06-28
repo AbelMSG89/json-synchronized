@@ -1,0 +1,18 @@
+{
+  "welcome": "Welcome to our application",
+  "nav": {
+    "home": "Home", 
+    "about": "About",
+    "contact": "Contact"
+  },
+  "messages": {
+    "success": "Operation completed successfully",
+    "error": "An error occurred: {0}",
+    "loading": "Loading..."
+  },
+  "user": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  }
+}
