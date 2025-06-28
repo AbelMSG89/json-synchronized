@@ -168,11 +168,25 @@
   visibility: visible;
 }
 
-.json-table__key--level-1 { padding-left: var(--json-table-indent-1); }
-.json-table__key--level-2 { padding-left: var(--json-table-indent-2); }
-.json-table__key--level-3 { padding-left: var(--json-table-indent-3); }
-.json-table__key--level-4 { padding-left: var(--json-table-indent-4); }
-.json-table__key--level-5 { padding-left: var(--json-table-indent-5); }
+.json-table__key--level-1 {
+  padding-left: var(--json-table-indent-1);
+}
+
+.json-table__key--level-2 {
+  padding-left: var(--json-table-indent-2);
+}
+
+.json-table__key--level-3 {
+  padding-left: var(--json-table-indent-3);
+}
+
+.json-table__key--level-4 {
+  padding-left: var(--json-table-indent-4);
+}
+
+.json-table__key--level-5 {
+  padding-left: var(--json-table-indent-5);
+}
 
 .json-table__key--group-level-1 {
   color: var(--json-table-rainbow-1);
@@ -189,16 +203,16 @@
   font-weight: var(--json-table-font-weight-bold);
 }
 
-.json-table__key > div:last-child {
+.json-table__key>div:last-child {
   display: flex;
   align-items: center;
   gap: var(--json-table-gap-xs);
 }
 
 .json-table__btn {
-  background-color: var(--json-table-btn-bg);
+  background-color: transparent;
   color: var(--json-table-btn-fg);
-  border: none;
+  border: 1px solid var(--json-table-border);
   border-radius: var(--json-table-radius-md);
   cursor: pointer;
   font-family: var(--json-table-font-family);
@@ -239,6 +253,42 @@
 
 .json-table__btn--danger:hover {
   background-color: var(--json-table-btn-danger-hover) !important;
+  opacity: var(--json-table-opacity-hover);
+}
+
+.json-table__btn--group-level-1 {
+  border: 1px solid var(--json-table-rainbow-1) !important;
+  color: var(--json-table-rainbow-1) !important;
+  background-color: transparent;
+}
+
+.json-table__btn--group-level-1:hover {
+  background-color: var(--json-table-rainbow-1) !important;
+  color: var(--json-table-bg) !important;
+  opacity: var(--json-table-opacity-hover);
+}
+
+.json-table__btn--group-level-2 {
+  border: 1px solid var(--json-table-rainbow-2) !important;
+  color: var(--json-table-rainbow-2) !important;
+  background-color: transparent;
+}
+
+.json-table__btn--group-level-2:hover {
+  background-color: var(--json-table-rainbow-2) !important;
+  color: var(--json-table-bg) !important;
+  opacity: var(--json-table-opacity-hover);
+}
+
+.json-table__btn--group-level-3 {
+  border: 1px solid var(--json-table-rainbow-3) !important;
+  color: var(--json-table-rainbow-3) !important;
+  background-color: transparent;
+}
+
+.json-table__btn--group-level-3:hover {
+  background-color: var(--json-table-rainbow-3) !important;
+  color: var(--json-table-bg) !important;
   opacity: var(--json-table-opacity-hover);
 }
 
@@ -347,6 +397,7 @@
   display: none;
   position: relative;
   align-items: center;
+  gap: var(--json-table-gap-md);
   z-index: 100;
   min-height: var(--json-table-btn-size-lg);
   justify-content: flex-start;
@@ -377,94 +428,11 @@
   padding-left: var(--json-table-indent-5);
 }
 
-.json-table__add-btn-single {
-  background-color: var(--json-table-btn-bg);
-  color: var(--json-table-btn-fg);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-family: var(--json-table-font-family);
-  font-size: var(--json-table-size-md);
-  font-weight: var(--json-table-font-weight-bold);
-  width: var(--json-table-btn-size-lg);
-  height: var(--json-table-btn-size-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color var(--json-table-transition);
-  flex-shrink: 0;
-  z-index: 200;
-  position: relative;
-}
-
-.json-table__add-btn-single:hover {
-  background-color: var(--json-table-btn-hover-bg);
-}
-
-.json-table__popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: transparent;
-  z-index: 99998;
-}
-
-.json-table__popup {
-  position: fixed;
-  background-color: var(--json-table-popup-bg);
-  border: 1px solid var(--json-table-popup-border);
-  border-radius: var(--json-table-radius-md);
-  box-shadow: 0 var(--json-table-gap-sm) var(--json-table-size-md) rgba(0, 0, 0, 0.3);
-  z-index: 99999;
-  min-width: calc(var(--json-table-size-base) * 7.5);
-  padding: var(--json-table-gap-sm);
-  max-width: calc(100vw - var(--json-table-size-base));
-}
-
-.json-table__popup-item {
-  display: flex;
-  align-items: center;
-  gap: var(--json-table-gap-sm);
-  width: 100%;
-  background: none;
-  border: none;
-  padding: var(--json-table-gap-md);
-  color: var(--json-table-fg);
-  font-family: var(--json-table-font-family);
-  font-size: var(--json-table-font-size-sm);
-  cursor: pointer;
-  border-radius: var(--json-table-radius-sm);
-  transition: background-color var(--json-table-transition);
-  text-align: left;
-}
-
-.json-table__popup-item:hover {
-  background-color: var(--json-table-hover-bg);
-}
-
-.json-table__popup-item:first-child {
-  margin-bottom: var(--json-table-gap-xs);
-}
-
 .json-table-container {
   overflow-x: auto;
   width: 100%;
   position: relative;
 }
-
-.json-table__add-controls--level-1 .json-table__add-controls--responsive { z-index: 101; }
-.json-table__add-controls--level-2 .json-table__add-controls--responsive { z-index: 102; }
-.json-table__add-controls--level-3 .json-table__add-controls--responsive { z-index: 103; }
-.json-table__add-controls--level-4 .json-table__add-controls--responsive { z-index: 104; }
-.json-table__add-controls--level-5 .json-table__add-controls--responsive { z-index: 105; }
-
-.json-table__add-controls--responsive.json-table__add-controls--level-1 .json-table__add-btn-single { z-index: 201; }
-.json-table__add-controls--responsive.json-table__add-controls--level-2 .json-table__add-btn-single { z-index: 202; }
-.json-table__add-controls--responsive.json-table__add-controls--level-3 .json-table__add-btn-single { z-index: 203; }
-.json-table__add-controls--responsive.json-table__add-controls--level-4 .json-table__add-btn-single { z-index: 204; }
-.json-table__add-controls--responsive.json-table__add-controls--level-5 .json-table__add-btn-single { z-index: 205; }
 
 .json-table__cell .json-table__edit-container {
   padding: var(--json-table-gap-sm);
