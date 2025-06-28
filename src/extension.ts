@@ -1,53 +1,53 @@
-import * as vscode from "vscode"
-import fsPromise from "fs/promises"
-import fs from "fs"
+import * as vscode from "vscode";
+import fsPromise from "fs/promises";
+import fs from "fs";
 
 export function activate(context: vscode.ExtensionContext) {
   const disposable = vscode.commands.registerCommand(
     "json-synchronizer.synchronize",
     async (uri) => {
       const files = await vscode.workspace.findFiles(
-        new vscode.RelativePattern(uri.fsPath, "**/*.json")
-      )
-      createWebviewPanel(uri.fsPath, context, files)
-    }
-  )
+        new vscode.RelativePattern(uri.fsPath, "**/*.json"),
+      );
+      createWebviewPanel(uri.fsPath, context, files);
+    },
+  );
 
-  context.subscriptions.push(disposable)
+  context.subscriptions.push(disposable);
 }
 
 export function deactivate() {}
 
 async function readAndParseJson(
-  filePath: string
+  filePath: string,
 ): Promise<Record<string, any>> {
   if (!fs.existsSync(filePath)) {
     // File doesn't exist; handle accordingly
-    return {}
+    return {};
   }
   try {
-    const content = await fsPromise.readFile(filePath, { encoding: "utf-8" })
+    const content = await fsPromise.readFile(filePath, { encoding: "utf-8" });
     if (!content.trim()) {
       // Content is empty; return an empty object or handle accordingly
-      return {}
+      return {};
     }
-    return JSON.parse(content)
+    return JSON.parse(content);
   } catch (e) {
-    console.warn(e)
+    console.warn(e);
     // Do not show error message here; handle it in the caller
-    throw e
+    throw e;
   }
 }
 
 async function createWebviewPanel(
   baseUriPath: string,
   context: vscode.ExtensionContext,
-  fileUris: vscode.Uri[]
+  fileUris: vscode.Uri[],
 ) {
   /**
    * fileName -> json data map
    */
-  const uriData: Record<string, any> = {}
+  const uriData: Record<string, any> = {};
 
   const result = await Promise.all(
     fileUris.map(async (uri) => {
@@ -55,24 +55,24 @@ async function createWebviewPanel(
         fileName: getFileName(baseUriPath, uri),
         json: await readAndParseJson(uri.fsPath),
         uri,
-      }
-    })
-  )
+      };
+    }),
+  );
 
   // Filter out files that contain arrays and show a warning
   const validResults = result.filter(({ fileName, json }) => {
     if (Array.isArray(json)) {
       vscode.window.showWarningMessage(
-        `Unable to load file '${fileName}'. No support for JSON arrays.`
-      )
-      return false
+        `Unable to load file '${fileName}'. No support for JSON arrays.`,
+      );
+      return false;
     }
-    return true
-  })
+    return true;
+  });
 
   // Update uriData and fileUris with valid files only
-  validResults.forEach(({ fileName, json }) => (uriData[fileName] = json))
-  fileUris = validResults.map(({ uri }) => uri)
+  validResults.forEach(({ fileName, json }) => (uriData[fileName] = json));
+  fileUris = validResults.map(({ uri }) => uri);
 
   const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
     "jsonFiles",
@@ -85,12 +85,12 @@ async function createWebviewPanel(
         // allow the webview to load local resources from the 'dist' directory
         vscode.Uri.joinPath(context.extensionUri, "dist"),
       ],
-    }
-  )
+    },
+  );
 
   const scriptUri = panel.webview.asWebviewUri(
-    vscode.Uri.joinPath(context.extensionUri, "dist", "webview.js")
-  )
+    vscode.Uri.joinPath(context.extensionUri, "dist", "webview.js"),
+  );
 
   panel.webview.html = `
     <!DOCTYPE html>
@@ -105,10 +105,10 @@ async function createWebviewPanel(
       <script src="${scriptUri}"></script>
     </body>
     </html>
-  `
+  `;
 
   // send initial data
-  panel.webview.postMessage({ type: "json", data: uriData })
+  panel.webview.postMessage({ type: "json", data: uriData });
 
   panel.webview.onDidReceiveMessage(
     async (message) => {
@@ -118,251 +118,267 @@ async function createWebviewPanel(
             `
               Invalid data: This extension only supports files containing a single JSON object with nested objects and string values. 
             `,
-            { modal: true, detail: message.newValue }
-          )
-          panel.dispose()
-          break
+            { modal: true, detail: message.newValue },
+          );
+          panel.dispose();
+          break;
         case "showWarning":
-          vscode.window.showWarningMessage(message.newValue)
-          break
+          vscode.window.showWarningMessage(message.newValue);
+          break;
         case "edit":
-          const fileUri = fileUris[message.fileIndex]
-          update(message.key, fileUri, message)
-          break
+          const fileUri = fileUris[message.fileIndex];
+          update(message.key, fileUri, message);
+          break;
         case "add":
           fileUris.forEach((fileUri) => {
-            update(message.key, fileUri, message)
-          })
-          break
+            update(message.key, fileUri, message);
+          });
+          break;
         case "remove":
           vscode.window
             .showInformationMessage(
               `Are you sure you want to delete ${message.key.join(".")}?`,
               { modal: true },
-              "OK"
+              "OK",
             )
             .then((res) => {
               if (res === "OK") {
                 fileUris.forEach((fileUri) => {
-                  deleteKey(message.key, fileUri)
-                })
+                  deleteKey(message.key, fileUri);
+                });
               }
-            })
-          break
+            });
+          break;
         case "renameKey":
           // Check if the new key already exists at the same level
-          const checkResult = checkKeyExists(message.oldPath, message.newKey, uriData)
+          const checkResult = checkKeyExists(
+            message.oldPath,
+            message.newKey,
+            uriData,
+          );
           if (checkResult.exists) {
-            vscode.window.showWarningMessage(`Key "${message.newKey}" already exists`)
-            return
+            vscode.window.showWarningMessage(
+              `Key "${message.newKey}" already exists`,
+            );
+            return;
           }
-          
+
           fileUris.forEach((fileUri) => {
-            renameKey(message.oldPath, message.newKey, fileUri)
-          })
-          break
+            renameKey(message.oldPath, message.newKey, fileUri);
+          });
+          break;
       }
     },
     undefined,
-    context.subscriptions
-  )
+    context.subscriptions,
+  );
 
   async function deleteKey(parts: string[], fileUri: vscode.Uri) {
-    const filePath = fileUri.fsPath
-    const jsonData = uriData[getFileName(baseUriPath, fileUri)]
+    const filePath = fileUri.fsPath;
+    const jsonData = uriData[getFileName(baseUriPath, fileUri)];
 
     if (!jsonData) {
       // The file was not loaded (e.g., contains an array)
-      return
+      return;
     }
 
-    let target = jsonData
+    let target = jsonData;
 
     for (let i = 0; i < parts.length - 1; i++) {
       if (target[parts[i]] === undefined) {
         // key path doesn't exist, nothing to remove
-        return
+        return;
       }
-      target = target[parts[i]]
+      target = target[parts[i]];
     }
 
-    const lastKey = parts[parts.length - 1]
+    const lastKey = parts[parts.length - 1];
     if (Object.prototype.hasOwnProperty.call(target, lastKey)) {
-      delete target[lastKey]
+      delete target[lastKey];
 
       await fsPromise.writeFile(
         filePath,
         JSON.stringify(jsonData, null, 2),
-        "utf-8"
-      )
+        "utf-8",
+      );
     }
   }
 
-  function checkKeyExists(oldPath: string[], newKey: string, uriData: Record<string, any>): { exists: boolean } {
+  function checkKeyExists(
+    oldPath: string[],
+    newKey: string,
+    uriData: Record<string, any>,
+  ): { exists: boolean } {
     // Check if the new key exists at the same level in any file
     for (const fileName in uriData) {
-      const jsonData = uriData[fileName]
+      const jsonData = uriData[fileName];
       if (!jsonData) {
-        continue
+        continue;
       }
 
-      let target = jsonData
-      
+      let target = jsonData;
+
       // Navigate to the parent object
       for (let i = 0; i < oldPath.length - 1; i++) {
         if (!target[oldPath[i]]) {
-          target = null
-          break
+          target = null;
+          break;
         }
-        target = target[oldPath[i]]
+        target = target[oldPath[i]];
       }
 
       // Check if new key exists at this level
       if (target && Object.prototype.hasOwnProperty.call(target, newKey)) {
-        return { exists: true }
+        return { exists: true };
       }
     }
-    return { exists: false }
+    return { exists: false };
   }
 
-  async function renameKey(oldPath: string[], newKey: string, fileUri: vscode.Uri) {
-    const filePath = fileUri.fsPath
-    const jsonData = uriData[getFileName(baseUriPath, fileUri)]
+  async function renameKey(
+    oldPath: string[],
+    newKey: string,
+    fileUri: vscode.Uri,
+  ) {
+    const filePath = fileUri.fsPath;
+    const jsonData = uriData[getFileName(baseUriPath, fileUri)];
 
     if (!jsonData) {
       // The file was not loaded (e.g., contains an array)
-      return
+      return;
     }
 
-    let target = jsonData
+    let target = jsonData;
 
     // Navigate to the parent object
     for (let i = 0; i < oldPath.length - 1; i++) {
       if (!target[oldPath[i]]) {
         // Path doesn't exist, nothing to rename
-        return
+        return;
       }
-      target = target[oldPath[i]]
+      target = target[oldPath[i]];
     }
 
-    const oldKey = oldPath[oldPath.length - 1]
-    
+    const oldKey = oldPath[oldPath.length - 1];
+
     // Check if the old key exists
     if (!Object.prototype.hasOwnProperty.call(target, oldKey)) {
-      return
+      return;
     }
 
     // Store the value
-    const value = target[oldKey]
-    
+    const value = target[oldKey];
+
     // Delete the old key and set the new key
-    delete target[oldKey]
-    target[newKey] = value
+    delete target[oldKey];
+    target[newKey] = value;
 
     // Update the uriData with the new structure
-    uriData[getFileName(baseUriPath, fileUri)] = jsonData
+    uriData[getFileName(baseUriPath, fileUri)] = jsonData;
 
     // Write to file
     await fsPromise.writeFile(
       filePath,
       JSON.stringify(jsonData, null, 2),
-      "utf-8"
-    )
+      "utf-8",
+    );
   }
 
   async function update(parts: string[], fileUri: vscode.Uri, message: any) {
-    const filePath = fileUri.fsPath
-    const newJsonData = uriData[getFileName(baseUriPath, fileUri)]
+    const filePath = fileUri.fsPath;
+    const newJsonData = uriData[getFileName(baseUriPath, fileUri)];
 
     if (!newJsonData) {
       // The file was not loaded (e.g., contains an array)
-      return
+      return;
     }
 
-    let target = newJsonData
+    let target = newJsonData;
     for (let i = 0; i < parts.length; i++) {
       if (i === parts.length - 1) {
-        target[parts[i]] = message.newValue
+        target[parts[i]] = message.newValue;
       } else {
         if (!target[parts[i]]) {
           // ensure nested objects exist
-          target[parts[i]] = {}
+          target[parts[i]] = {};
         }
-        target = target[parts[i]]
+        target = target[parts[i]];
       }
     }
     await fsPromise.writeFile(
       filePath,
       JSON.stringify(newJsonData, null, 2),
-      "utf-8"
-    )
+      "utf-8",
+    );
   }
 
   // Create a single watcher for all JSON files in the folder
-  const pattern = new vscode.RelativePattern(baseUriPath, "**/*.json")
-  const watcher = vscode.workspace.createFileSystemWatcher(pattern)
+  const pattern = new vscode.RelativePattern(baseUriPath, "**/*.json");
+  const watcher = vscode.workspace.createFileSystemWatcher(pattern);
 
-  const maxRetries = 5
-  const retryDelay = 50 // milliseconds
+  const maxRetries = 5;
+  const retryDelay = 50; // milliseconds
 
-  const pendingUpdates: { [key: string]: NodeJS.Timeout } = {}
+  const pendingUpdates: { [key: string]: NodeJS.Timeout } = {};
 
   async function handleFileChange(uri: vscode.Uri, attempt = 1) {
-    const fileName = getFileName(baseUriPath, uri)
+    const fileName = getFileName(baseUriPath, uri);
     try {
-      const data = await readAndParseJson(uri.fsPath)
+      const data = await readAndParseJson(uri.fsPath);
 
       if (Array.isArray(data)) {
         vscode.window.showWarningMessage(
-          `Unable to load file '${fileName}'. No support for JSON arrays.`
-        )
+          `Unable to load file '${fileName}'. No support for JSON arrays.`,
+        );
         // Remove the file from uriData and fileUris if it was previously valid
         if (uriData[fileName]) {
-          delete uriData[fileName]
-          fileUris = fileUris.filter((file) => file.fsPath !== uri.fsPath)
-          panel.webview.postMessage({ type: "json", data: uriData })
+          delete uriData[fileName];
+          fileUris = fileUris.filter((file) => file.fsPath !== uri.fsPath);
+          panel.webview.postMessage({ type: "json", data: uriData });
         }
-        return
+        return;
       }
 
       // If the file was not previously loaded and is now valid, add it
       if (!uriData[fileName]) {
-        uriData[fileName] = data
-        fileUris.push(uri)
+        uriData[fileName] = data;
+        fileUris.push(uri);
       } else {
-        uriData[fileName] = data
+        uriData[fileName] = data;
       }
 
-      panel.webview.postMessage({ type: "json", data: uriData })
+      panel.webview.postMessage({ type: "json", data: uriData });
     } catch (e) {
       // If the file is empty or invalid, retry after a short delay
       if (attempt <= maxRetries) {
-        clearTimeout(pendingUpdates[uri.fsPath])
+        clearTimeout(pendingUpdates[uri.fsPath]);
         pendingUpdates[uri.fsPath] = setTimeout(() => {
-          handleFileChange(uri, attempt + 1)
-        }, retryDelay)
+          handleFileChange(uri, attempt + 1);
+        }, retryDelay);
       } else {
         // After max retries, give up and show an error if necessary
-        console.warn(`Failed to parse JSON file after ${maxRetries} attempts: ${uri.fsPath}`)
+        console.warn(
+          `Failed to parse JSON file after ${maxRetries} attempts: ${uri.fsPath}`,
+        );
       }
     }
   }
 
-  watcher.onDidChange(handleFileChange)
+  watcher.onDidChange(handleFileChange);
   watcher.onDidCreate(async (uri) => {
     // Handle new file creation
-    await handleFileChange(uri)
-  })
+    await handleFileChange(uri);
+  });
   watcher.onDidDelete((uri) => {
     // Handle file deletion
-    const fileName = getFileName(baseUriPath, uri)
-    delete uriData[fileName]
+    const fileName = getFileName(baseUriPath, uri);
+    delete uriData[fileName];
     // Remove the fileUri from the array
-    fileUris = fileUris.filter((file) => file.fsPath !== uri.fsPath)
-    panel.webview.postMessage({ type: "json", data: uriData })
-  })
+    fileUris = fileUris.filter((file) => file.fsPath !== uri.fsPath);
+    panel.webview.postMessage({ type: "json", data: uriData });
+  });
 
-  panel.onDidDispose(() => watcher.dispose())
+  panel.onDidDispose(() => watcher.dispose());
 }
 
 /**
@@ -371,12 +387,14 @@ async function createWebviewPanel(
  * For nested files like /en/comments.json -> "en/comments"
  */
 function getFileName(baseUriPath: string, uri: vscode.Uri) {
-  const relativePath = uri.fsPath.substring(baseUriPath.length)
+  const relativePath = uri.fsPath.substring(baseUriPath.length);
   // Remove leading slash if present
-  const cleanPath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath
-  
+  const cleanPath = relativePath.startsWith("/")
+    ? relativePath.substring(1)
+    : relativePath;
+
   // Remove .json extension
-  const withoutExtension = cleanPath.replace(/\.json$/, '')
-  
-  return withoutExtension
+  const withoutExtension = cleanPath.replace(/\.json$/, "");
+
+  return withoutExtension;
 }
