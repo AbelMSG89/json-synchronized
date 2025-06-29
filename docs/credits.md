@@ -4,7 +4,7 @@
 
 ### Primary Base Project
 
-**[oscar-green/json-synchronized](https://github.com/oscar-green/json-synchronized)**
+**[oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer)**
 
 - **Author**: oscar-green
 - **License**: MIT

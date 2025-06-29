@@ -22,7 +22,7 @@ multilingual projects.
 ## 🎯 About This Project
 
 This extension is based on the excellent work of
-[oscar-green/json-synchronized](https://github.com/oscar-green/json-synchronized)
+[oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer)
 and incorporates translation service patterns from
 [DionJChapman/Localization-Internationalization-Editor](https://github.com/DionJChapman/Localization-Internationalization-Editor).
 
@@ -170,13 +170,13 @@ The translation button will only appear when:
 Right click on a folder and click "Synchronize JSON" to open all JSON files in the
 file structure below. <br>
 
-![feature X](https://github.com/oscar-green/json-synchronized/blob/main/media/folder-click.gif?raw=true)
+![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/folder-click.gif?raw=true)
 
 Files are edited in realtime. <br>
-![feature X](https://github.com/oscar-green/json-synchronized/blob/main/media/realtime-edit.gif?raw=true)
+![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/realtime-edit.gif?raw=true)
 
 Aggregates warnings of missing values in nested objects.<br>
-![feature X](https://github.com/oscar-green/json-synchronized/blob/main/media/aggregate-warnings.gif?raw=true)
+![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/aggregate-warnings.gif?raw=true)
 
 </div>
 
@@ -196,7 +196,7 @@ This project builds upon the foundation of excellent open-source work:
 
 ### Original Project
 
-- **[oscar-green/json-synchronized](https://github.com/oscar-green/json-synchronized)**
+- **[oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer)**
   - Original JSON Synchronized extension
   - Core JSON synchronization functionality
   - File watching and real-time updates
