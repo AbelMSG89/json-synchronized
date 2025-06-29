@@ -1,6 +1,6 @@
 # API Reference
 
-This document provides detailed API reference for JSON Synchronizer's translation
+This document provides detailed API reference for JSON Synchronized's translation
 services and configuration.
 
 ## Translation Services
@@ -61,8 +61,8 @@ Google Cloud Translation API implementation.
 
 ```json
 {
-  "json-synchronizer.translationService": "GoogleTranslator",
-  "json-synchronizer.translationServiceGoogle": ["api-key", "", "project-id"]
+  "json-synchronized.translationService": "GoogleTranslator",
+  "json-synchronized.translationServiceGoogle": ["api-key", "", "project-id"]
 }
 ```
 
@@ -96,8 +96,8 @@ Azure Cognitive Services Translator implementation.
 
 ```json
 {
-  "json-synchronizer.translationService": "MicrosoftTranslator",
-  "json-synchronizer.translationServiceMicrosoft": ["subscription-key", "", "region"]
+  "json-synchronized.translationService": "MicrosoftTranslator",
+  "json-synchronized.translationServiceMicrosoft": ["subscription-key", "", "region"]
 }
 ```
 
@@ -132,8 +132,8 @@ AWS Translate service implementation.
 
 ```json
 {
-  "json-synchronizer.translationService": "AmazonTranslator",
-  "json-synchronizer.translationServiceAmazon": ["access-key", "secret-key", "region"]
+  "json-synchronized.translationService": "AmazonTranslator",
+  "json-synchronized.translationServiceAmazon": ["access-key", "secret-key", "region"]
 }
 ```
 
@@ -228,10 +228,10 @@ Gets environment variable value.
 
 ```json
 {
-  "json-synchronizer.translationService":
+  "json-synchronized.translationService":
     "GoogleTranslator" | "MicrosoftTranslator" | "AmazonTranslator",
-  "json-synchronizer.defaultLanguage": "en",
-  "json-synchronizer.envFilePath": "./path/to/.env"
+  "json-synchronized.defaultLanguage": "en",
+  "json-synchronized.envFilePath": "./path/to/.env"
 }
 ```
 
@@ -241,7 +241,7 @@ Gets environment variable value.
 
 ```json
 {
-  "json-synchronizer.translationServiceGoogle": [
+  "json-synchronized.translationServiceGoogle": [
     "api-key",
     "", 
     "project-id"
@@ -253,7 +253,7 @@ Gets environment variable value.
 
 ```json
 {
-  "json-synchronizer.translationServiceMicrosoft": [
+  "json-synchronized.translationServiceMicrosoft": [
     "subscription-key",
     "",
     "region"
@@ -265,7 +265,7 @@ Gets environment variable value.
 
 ```json
 {
-  "json-synchronizer.translationServiceAmazon": [
+  "json-synchronized.translationServiceAmazon": [
     "access-key-id",
     "secret-access-key", 
     "region"
@@ -277,22 +277,24 @@ Gets environment variable value.
 
 ### Palette Commands
 
-#### `JSON Synchronizer: Select Environment File`
+#### `JSON Synchronized: Select Environment File`
 
-**Command ID:** `json-synchronizer.selectEnvFile`
+**Command ID:** `json-synchronized.selectEnvFile`
+
+**Title:** JSON Synchronized: Select Environment File
 
 Opens file picker to select custom .env file for loading environment variables.
 
 **Usage:**
 
 1. Open Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
-2. Type "JSON Synchronizer: Select Environment File"
+2. Type "JSON Synchronized: Select Environment File"
 3. Select your .env file from the file picker
 4. Extension will load environment variables from selected file
 
-#### `JSON Synchronizer: Translate Field`
+#### `JSON Synchronized: Translate Field`
 
-**Command ID:** `json-synchronizer.translateField`
+**Command ID:** `json-synchronized.translateField`
 
 **Internal command** - Triggered by translation button clicks in the UI.
 

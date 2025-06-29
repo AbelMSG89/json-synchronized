@@ -1,17 +1,20 @@
 <h1 align="center">
-  <img src="./media/logo.png" width="94" alt="JSON Synchronizer Logo">
-  JSON Synchronizer
+    <img src="./media/logo.png" width="94" alt="JSON Synchronized Logo">
+    <p>
+      JSON Synchronized
+    </p>
+  </div>
   <div align="center">
-    <a href="https://marketplace.visualstudio.com/items?itemName=AbelMSG89.json-synchronizer">
+    <a href="https://marketplace.visualstudio.com/items?itemName=AbelMSG89.json-synchronized">
       <img
-        src="https://img.shields.io/visual-studio-marketplace/v/AbelMSG89.json-synchronizer?color=blue&amp;label=JSON%20Synchronizer&logo=visual-studio-code"
+        src="https://img.shields.io/visual-studio-marketplace/v/AbelMSG89.json-synchronized?color=blue&amp;label=JSON%20Synchronized&logo=visual-studio-code"
         alt="Visual Studio Marketplace Version"
       />
     </a>
   </div>
 </h1>
 
-JSON Synchronizer allows simultaneous editing of multiple JSON files with
+JSON Synchronized allows simultaneous editing of multiple JSON files with
 enhanced translation capabilities. Each file must contain a single object,
 which can include nested objects and strings. Perfect for i18n management and
 multilingual projects.
@@ -19,7 +22,7 @@ multilingual projects.
 ## 🎯 About This Project
 
 This extension is based on the excellent work of
-[oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer)
+[oscar-green/json-synchronized](https://github.com/oscar-green/json-synchronized)
 and incorporates translation service patterns from
 [DionJChapman/Localization-Internationalization-Editor](https://github.com/DionJChapman/Localization-Internationalization-Editor).
 
@@ -32,7 +35,7 @@ and incorporates translation service patterns from
 
 ## 🌍 Translation Support
 
-JSON Synchronizer now includes automatic translation support using leading
+JSON Synchronized now includes automatic translation support using leading
 cloud translation services:
 
 - **Microsoft Translator** - Azure Cognitive Services
@@ -72,7 +75,7 @@ Set the appropriate environment variables for your chosen service. You can use:
 1. Copy `.env.example` to `.env` (default) or your preferred file (e.g., `.env.development`)
 2. Add your API credentials to the file
 3. For custom files: Use Command Palette:  
-   `JSON Synchronizer: Select Environment File`
+   `JSON Synchronized: Select Environment File`
 4. For default `.env`: Just place it in your workspace root - it will be loaded automatically
 
 **Supported .env file paths:**
@@ -108,8 +111,8 @@ Then configure only the service in VS Code settings:
 
 ```json
 {
-  "json-synchronizer.translationService": "GoogleTranslator",
-  "json-synchronizer.defaultLanguage": "en"
+  "json-synchronized.translationService": "GoogleTranslator",
+  "json-synchronized.defaultLanguage": "en"
 }
 ```
 
@@ -119,8 +122,8 @@ Then configure only the service in VS Code settings:
 
 ```json
 {
-  "json-synchronizer.translationService": "MicrosoftTranslator",
-  "json-synchronizer.translationServiceMicrosoft": ["your-api-key", "", "your-region"]
+  "json-synchronized.translationService": "MicrosoftTranslator",
+  "json-synchronized.translationServiceMicrosoft": ["your-api-key", "", "your-region"]
 }
 ```
 
@@ -128,8 +131,8 @@ Then configure only the service in VS Code settings:
 
 ```json
 {
-  "json-synchronizer.translationService": "GoogleTranslator", 
-  "json-synchronizer.translationServiceGoogle": ["your-api-key", "", "your-project-id"]
+  "json-synchronized.translationService": "GoogleTranslator", 
+  "json-synchronized.translationServiceGoogle": ["your-api-key", "", "your-project-id"]
 }
 ```
 
@@ -137,8 +140,8 @@ Then configure only the service in VS Code settings:
 
 ```json
 {
-  "json-synchronizer.translationService": "AmazonTranslator",
-  "json-synchronizer.translationServiceAmazon": [
+  "json-synchronized.translationService": "AmazonTranslator",
+  "json-synchronized.translationServiceAmazon": [
     "your-access-key",
     "your-secret-key",
     "your-region"
@@ -148,7 +151,7 @@ Then configure only the service in VS Code settings:
 
 ### Usage
 
-1. **Open JSON Synchronizer** on a folder containing JSON files with language
+1. **Open JSON Synchronized** on a folder containing JSON files with language
    codes (e.g., `en.json`, `es.json`, `fr.json`)
 2. **Enter text** in any field that contains content
 3. **Click the translation button** (🌐) that appears when hovering over cells  
@@ -167,13 +170,13 @@ The translation button will only appear when:
 Right click on a folder and click "Synchronize JSON" to open all JSON files in the
 file structure below. <br>
 
-![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/folder-click.gif?raw=true)
+![feature X](https://github.com/oscar-green/json-synchronized/blob/main/media/folder-click.gif?raw=true)
 
 Files are edited in realtime. <br>
-![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/realtime-edit.gif?raw=true)
+![feature X](https://github.com/oscar-green/json-synchronized/blob/main/media/realtime-edit.gif?raw=true)
 
 Aggregates warnings of missing values in nested objects.<br>
-![feature X](https://github.com/oscar-green/json-synchronizer/blob/main/media/aggregate-warnings.gif?raw=true)
+![feature X](https://github.com/oscar-green/json-synchronized/blob/main/media/aggregate-warnings.gif?raw=true)
 
 </div>
 
@@ -193,8 +196,8 @@ This project builds upon the foundation of excellent open-source work:
 
 ### Original Project
 
-- **[oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer)**
-  - Original JSON Synchronizer extension
+- **[oscar-green/json-synchronized](https://github.com/oscar-green/json-synchronized)**
+  - Original JSON Synchronized extension
   - Core JSON synchronization functionality
   - File watching and real-time updates
   - Table-based editing interface
@@ -230,7 +233,7 @@ See the [LICENSE](./LICENSE) file for details.
 
 ## 🔗 Links
 
-- [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=AbelMSG89.json-synchronizer)
-- [GitHub Repository](https://github.com/AbelMSG89/json-synchronizer)
-- [Issue Tracker](https://github.com/AbelMSG89/json-synchronizer/issues)
+- [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=AbelMSG89.json-synchronized)
+- [GitHub Repository](https://github.com/AbelMSG89/json-synchronized)
+- [Issue Tracker](https://github.com/AbelMSG89/json-synchronized/issues)
 - [Documentation](./docs/)

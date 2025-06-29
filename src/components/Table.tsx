@@ -12,7 +12,7 @@ import {
   hasContentToTranslate,
 } from "../utils/dataUtils";
 import { generateTableRows } from "../utils/tableRowGenerator";
-import { useKeyEditing } from "../hooks/useJSONSynchronizer";
+import { useKeyEditing } from "../hooks/useJSONSynchronized";
 import { AddNewKey } from "./AddNewKey";
 import { TranslationButton } from "./TranslationButton";
 import { EditIcon, DeleteIcon, CloseIcon, CheckIcon } from "./Icons";

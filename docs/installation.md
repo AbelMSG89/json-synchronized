@@ -13,12 +13,12 @@
 
 1. Open VS Code
 2. Go to Extensions view (`Ctrl+Shift+X` or `Cmd+Shift+X`)
-3. Search for "JSON Synchronizer"
+3. Search for "JSON Synchronized"
 4. Click **Install** on the extension by AbelMSG89
 
 ### Manual Installation
 
-1. Download the `.vsix` file from the [releases page](https://github.com/AbelMSG89/json-synchronizer/releases)
+1. Download the `.vsix` file from the [releases page](https://github.com/AbelMSG89/json-synchronized/releases)
 2. Open VS Code
 3. Go to Extensions view (`Ctrl+Shift+X`)
 4. Click the `...` menu → **Install from VSIX...**
@@ -28,10 +28,10 @@
 
 ### 1. Verify Installation
 
-After installation, you should see the JSON Synchronizer command available:
+After installation, you should see the JSON Synchronized command available:
 
 1. Open Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`)
-2. Type "JSON Synchronizer"
+2. Type "JSON Synchronized"
 3. You should see available commands
 
 ### 2. Test Basic Functionality
@@ -77,7 +77,7 @@ translation service:
 
    ```json
    {
-     "json-synchronizer.translationService": "GoogleTranslator"
+     "json-synchronized.translationService": "GoogleTranslator"
    }
    ```
 
@@ -113,9 +113,9 @@ Create `.vscode/settings.json`:
 
 ```json
 {
-  "json-synchronizer.translationService": "GoogleTranslator",
-  "json-synchronizer.defaultLanguage": "en",
-  "json-synchronizer.envFilePath": ".env.development"
+  "json-synchronized.translationService": "GoogleTranslator",
+  "json-synchronized.defaultLanguage": "en",
+  "json-synchronized.envFilePath": ".env.development"
 }
 ```
 
@@ -125,7 +125,7 @@ Create `.vscode/settings.json`:
 
 1. **Check VS Code Version**: Ensure you're using VS Code 1.93.0+
 2. **Restart VS Code**: Sometimes a restart is needed after installation
-3. **Check Output Panel**: Go to View → Output → Select "JSON Synchronizer"
+3. **Check Output Panel**: Go to View → Output → Select "JSON Synchronized"
 
 ### Command Not Available
 
@@ -156,5 +156,5 @@ If you encounter issues:
 
 1. 📋 Check the [Troubleshooting Guide](./troubleshooting.md)
 2. ❓ Read the [FAQ](./faq.md)
-3. 🐛 Report bugs on [GitHub Issues](https://github.com/AbelMSG89/json-synchronizer/issues)
-4. 💬 Ask questions in [Discussions](https://github.com/AbelMSG89/json-synchronizer/discussions)
+3. 🐛 Report bugs on [GitHub Issues](https://github.com/AbelMSG89/json-synchronized/issues)
+4. 💬 Ask questions in [Discussions](https://github.com/AbelMSG89/json-synchronized/discussions)

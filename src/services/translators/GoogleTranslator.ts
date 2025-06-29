@@ -14,7 +14,7 @@ export class GoogleTranslator implements ITranslationService {
       TranslationConfiguration.TRANSLATION_SERVICE_API_KEY;
     if (!apiKey || apiKey.length === 0) {
       vscode.window.showErrorMessage(
-        "Your Google API Key is blank. Please update setting json-synchronizer.translationServiceApiKey",
+        "Your Google API Key is blank. Please update setting json-synchronized.translationServiceApiKey",
       );
       return { [request.sourceLanguage]: request.text };
     }
@@ -24,7 +24,7 @@ export class GoogleTranslator implements ITranslationService {
       TranslationConfiguration.TRANSLATION_SERVICE_API_REGION;
     if (!projectId || projectId.length === 0) {
       vscode.window.showErrorMessage(
-        "Your Google Project ID is blank. Please update setting json-synchronizer.translationServiceApiRegion",
+        "Your Google Project ID is blank. Please update setting json-synchronized.translationServiceApiRegion",
       );
       return { [request.sourceLanguage]: request.text };
     }

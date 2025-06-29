@@ -1,6 +1,6 @@
-# Contributing to JSON Synchronizer
+# Contributing to JSON Synchronized
 
-Thank you for your interest in contributing to JSON Synchronizer!  
+Thank you for your interest in contributing to JSON Synchronized!  
 This document provides guidelines and information for contributors.
 
 ## 🚀 Getting Started
@@ -17,8 +17,8 @@ This document provides guidelines and information for contributors.
 1. **Fork and Clone**
 
    ```bash
-   git clone https://github.com/YourUsername/json-synchronizer.git
-   cd json-synchronizer
+   git clone https://github.com/YourUsername/json-synchronized.git
+   cd json-synchronized
    ```
 
 2. **Install Dependencies**
@@ -402,8 +402,8 @@ Contributors will be:
 If you have questions about contributing:
 
 1. Check the [FAQ](./docs/faq.md)
-2. Search existing [issues](https://github.com/AbelMSG89/json-synchronizer/issues)
-3. Create a [discussion](https://github.com/AbelMSG89/json-synchronizer/discussions)
+2. Search existing [issues](https://github.com/AbelMSG89/json-synchronized/issues)
+3. Create a [discussion](https://github.com/AbelMSG89/json-synchronized/discussions)
 4. Ask in a pull request review
 
-Thank you for contributing to JSON Synchronizer! 🎉
+Thank you for contributing to JSON Synchronized! 🎉

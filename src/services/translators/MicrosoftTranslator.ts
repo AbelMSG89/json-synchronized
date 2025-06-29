@@ -14,7 +14,7 @@ export class MicrosoftTranslator implements ITranslationService {
       TranslationConfiguration.TRANSLATION_SERVICE_API_KEY;
     if (!apiKey || apiKey.length === 0) {
       vscode.window.showErrorMessage(
-        "Your Microsoft API Key is blank. Please update setting json-synchronizer.translationServiceApiKey",
+        "Your Microsoft API Key is blank. Please update setting json-synchronized.translationServiceApiKey",
       );
       return { [request.sourceLanguage]: request.text };
     }
@@ -24,7 +24,7 @@ export class MicrosoftTranslator implements ITranslationService {
       TranslationConfiguration.TRANSLATION_SERVICE_API_REGION;
     if (!apiRegion || apiRegion.length === 0) {
       vscode.window.showErrorMessage(
-        "Your Microsoft API Region is blank. Please update setting json-synchronizer.translationServiceApiRegion",
+        "Your Microsoft API Region is blank. Please update setting json-synchronized.translationServiceApiRegion",
       );
       return { [request.sourceLanguage]: request.text };
     }

@@ -2,7 +2,7 @@
 
 ## Overview
 
-JSON Synchronizer supports flexible environment configuration for managing
+JSON Synchronized supports flexible environment configuration for managing
 translation service credentials securely. You can use system environment variables,
 custom .env files, or a combination of both.
 
@@ -28,7 +28,7 @@ Configure credentials directly in VS Code settings (less secure).
 
 ### Automatic Detection
 
-JSON Synchronizer automatically loads a `.env` file from your workspace root if:
+JSON Synchronized automatically loads a `.env` file from your workspace root if:
 
 - No custom `envFilePath` is specified in settings
 - The `.env` file exists in the workspace root
@@ -36,11 +36,11 @@ JSON Synchronizer automatically loads a `.env` file from your workspace root if:
 
 ### Custom Environment Files
 
-Configure custom environment files using the `json-synchronizer.envFilePath` setting:
+Configure custom environment files using the `json-synchronized.envFilePath` setting:
 
 ```json
 {
-  "json-synchronizer.envFilePath": ".env.development"
+  "json-synchronized.envFilePath": ".env.development"
 }
 ```
 
@@ -68,7 +68,7 @@ C:\Users\Username\config\.env
 Use the Command Palette for easy environment file management:
 
 1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac)
-2. Type: `JSON Synchronizer: Select Environment File`
+2. Type: `JSON Synchronized: Select Environment File`
 3. Choose from available .env files in your workspace
 4. Select "None" to use system environment variables
 
@@ -86,8 +86,8 @@ GOOGLE_CLOUD_PROJECT=your-google-cloud-project-id
 #### Google Translate Custom Variables
 
 ```bash
-JSON_SYNCHRONIZER_GOOGLE_KEY=your-api-key
-JSON_SYNCHRONIZER_GOOGLE_PROJECT=your-project-id
+JSON_SYNCHRONIZED_GOOGLE_KEY=your-api-key
+JSON_SYNCHRONIZED_GOOGLE_PROJECT=your-project-id
 ```
 
 ### Microsoft Translator API
@@ -102,8 +102,8 @@ AZURE_TRANSLATOR_REGION=your-azure-region
 #### Microsoft Custom Variables
 
 ```bash
-JSON_SYNCHRONIZER_MICROSOFT_KEY=your-translator-key
-JSON_SYNCHRONIZER_MICROSOFT_REGION=your-region
+JSON_SYNCHRONIZED_MICROSOFT_KEY=your-translator-key
+JSON_SYNCHRONIZED_MICROSOFT_REGION=your-region
 ```
 
 ### Amazon Translate API
@@ -119,9 +119,9 @@ AWS_DEFAULT_REGION=your-aws-region
 #### Amazon Custom Variables
 
 ```bash
-JSON_SYNCHRONIZER_AMAZON_KEY=your-access-key-id
-JSON_SYNCHRONIZER_AMAZON_SECRET=your-secret-access-key
-JSON_SYNCHRONIZER_AMAZON_REGION=your-region
+JSON_SYNCHRONIZED_AMAZON_KEY=your-access-key-id
+JSON_SYNCHRONIZED_AMAZON_SECRET=your-secret-access-key
+JSON_SYNCHRONIZED_AMAZON_REGION=your-region
 ```
 
 ## Configuration Examples
@@ -132,16 +132,16 @@ JSON_SYNCHRONIZER_AMAZON_REGION=your-region
 
 ```bash
 # Google Translate Configuration
-JSON_SYNCHRONIZER_GOOGLE_KEY=AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-JSON_SYNCHRONIZER_GOOGLE_PROJECT=my-translation-project
+JSON_SYNCHRONIZED_GOOGLE_KEY=AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+JSON_SYNCHRONIZED_GOOGLE_PROJECT=my-translation-project
 ```
 
 VS Code Settings:
 
 ```json
 {
-  "json-synchronizer.translationService": "GoogleTranslator",
-  "json-synchronizer.defaultLanguage": "en"
+  "json-synchronized.translationService": "GoogleTranslator",
+  "json-synchronized.defaultLanguage": "en"
 }
 ```
 
@@ -151,24 +151,24 @@ VS Code Settings:
 
 ```bash
 # Development Translation Settings
-JSON_SYNCHRONIZER_GOOGLE_KEY=AIzaSyDev_key_here
-JSON_SYNCHRONIZER_GOOGLE_PROJECT=my-dev-project
+JSON_SYNCHRONIZED_GOOGLE_KEY=AIzaSyDev_key_here
+JSON_SYNCHRONIZED_GOOGLE_PROJECT=my-dev-project
 ```
 
 **Production Environment** (`.env.production`):
 
 ```bash
 # Production Translation Settings  
-JSON_SYNCHRONIZER_GOOGLE_KEY=AIzaSyProd_key_here
-JSON_SYNCHRONIZER_GOOGLE_PROJECT=my-prod-project
+JSON_SYNCHRONIZED_GOOGLE_KEY=AIzaSyProd_key_here
+JSON_SYNCHRONIZED_GOOGLE_PROJECT=my-prod-project
 ```
 
 **Workspace Settings**:
 
 ```json
 {
-  "json-synchronizer.translationService": "GoogleTranslator",
-  "json-synchronizer.envFilePath": ".env.development"
+  "json-synchronized.translationService": "GoogleTranslator",
+  "json-synchronized.envFilePath": ".env.development"
 }
 ```
 
@@ -178,24 +178,24 @@ JSON_SYNCHRONIZER_GOOGLE_PROJECT=my-prod-project
 
 ```bash
 # Google Translate
-JSON_SYNCHRONIZER_GOOGLE_KEY=your-google-key
-JSON_SYNCHRONIZER_GOOGLE_PROJECT=your-google-project
+JSON_SYNCHRONIZED_GOOGLE_KEY=your-google-key
+JSON_SYNCHRONIZED_GOOGLE_PROJECT=your-google-project
 
 # Microsoft Translator
-JSON_SYNCHRONIZER_MICROSOFT_KEY=your-microsoft-key
-JSON_SYNCHRONIZER_MICROSOFT_REGION=eastus
+JSON_SYNCHRONIZED_MICROSOFT_KEY=your-microsoft-key
+JSON_SYNCHRONIZED_MICROSOFT_REGION=eastus
 
 # Amazon Translate
-JSON_SYNCHRONIZER_AMAZON_KEY=your-amazon-key
-JSON_SYNCHRONIZER_AMAZON_SECRET=your-amazon-secret
-JSON_SYNCHRONIZER_AMAZON_REGION=us-east-1
+JSON_SYNCHRONIZED_AMAZON_KEY=your-amazon-key
+JSON_SYNCHRONIZED_AMAZON_SECRET=your-amazon-secret
+JSON_SYNCHRONIZED_AMAZON_REGION=us-east-1
 ```
 
 Switch between services by changing the setting:
 
 ```json
 {
-  "json-synchronizer.translationService": "MicrosoftTranslator"
+  "json-synchronized.translationService": "MicrosoftTranslator"
 }
 ```
 
@@ -261,7 +261,7 @@ pwd
 
 ```json
 {
-  "json-synchronizer.envFilePath": ".env.development"
+  "json-synchronized.envFilePath": ".env.development"
 }
 ```
 
@@ -276,7 +276,7 @@ pwd
 **Debug Loading**:
 
 1. Open VS Code Output panel
-2. Select "JSON Synchronizer" from dropdown
+2. Select "JSON Synchronized" from dropdown
 3. Look for environment loading messages
 
 ### Permission Issues
@@ -303,7 +303,7 @@ ls -la .env
 
 ```json
 {
-  "json-synchronizer.translationService": "GoogleTranslator"
+  "json-synchronized.translationService": "GoogleTranslator"
 }
 ```
 
@@ -319,7 +319,7 @@ ls -la .env
 
 Use the Command Palette:
 
-1. `Ctrl+Shift+P` → `JSON Synchronizer: Select Environment File`
+1. `Ctrl+Shift+P` → `JSON Synchronized: Select Environment File`
 2. The current environment status is shown in the selection list
 
 ### Status Messages
@@ -342,10 +342,10 @@ Use the Command Palette:
 
    ```bash
    # From settings.json
-   "json-synchronizer.translationServiceGoogle": ["key", "", "project"]
+   "json-synchronized.translationServiceGoogle": ["key", "", "project"]
    
    # To .env file
-   JSON_SYNCHRONIZER_GOOGLE_KEY=key
+   JSON_SYNCHRONIZED_GOOGLE_KEY=key
    JSON_SYNCHRONIZER_GOOGLE_PROJECT=project
    ```
 
@@ -353,7 +353,7 @@ Use the Command Palette:
 
    ```json
    {
-     "json-synchronizer.translationService": "GoogleTranslator"
+     "json-synchronized.translationService": "GoogleTranslator"
      // Remove credential arrays
    }
    ```

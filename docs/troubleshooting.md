@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-This guide helps you resolve common issues with JSON Synchronizer.
+This guide helps you resolve common issues with JSON Synchronized.
 
 ## Common Issues
 
@@ -50,7 +50,7 @@ This guide helps you resolve common issues with JSON Synchronizer.
 
 **Solution:**
 
-1. Use `JSON Synchronizer: Select Environment File` command to select the
+1. Use `JSON Synchronized: Select Environment File` command to select the
    correct .env file
 2. Ensure .env file is readable and properly formatted:
 
@@ -72,7 +72,7 @@ This guide helps you resolve common issues with JSON Synchronizer.
 
 **Solution:**
 
-1. Use the Command Palette command `JSON Synchronizer: Select Environment File`
+1. Use the Command Palette command `JSON Synchronized: Select Environment File`
    to browse and select your .env file
 2. Check if the file exists in the expected location
 3. For relative paths, ensure they're relative to the workspace root
@@ -92,7 +92,7 @@ This guide helps you resolve common issues with JSON Synchronizer.
 
 1. Ensure all files have valid JSON syntax
 2. Check file permissions (files must be writable)
-3. Refresh the JSON Synchronizer view
+3. Refresh the JSON Synchronized view
 4. Close and reopen the extension
 
 #### Issue: Wrong language detection
@@ -158,27 +158,27 @@ Check your API keys and ensure they're correctly configured with appropriate per
 
 If you're still experiencing issues:
 
-1. **Check the Output Panel**: Go to `View > Output` and select "JSON Synchronizer"
+1. **Check the Output Panel**: Go to `View > Output` and select "JSON Synchronized"
    to see detailed logs
-2. **Enable Debug Mode**: Add `"json-synchronizer.debug": true` to your
+2. **Enable Debug Mode**: Add `"json-synchronized.debug": true` to your
    VS Code settings for verbose logging
 3. **Check Developer Console**: Use `Help > Toggle Developer Tools` to
    see JavaScript errors
 4. **Review Configuration**: Verify all settings in `File > Preferences > Settings`
-   under "JSON Synchronizer"
+   under "JSON Synchronized"
 
 ## Reporting Issues
 
 When reporting issues, please include:
 
-1. **VS Code version** and **JSON Synchronizer version**
+1. **VS Code version** and **JSON Synchronized version**
 2. **Operating system** and version
 3. **Complete error messages** from the Output panel or Developer Console
 4. **Configuration details** (without exposing API keys)
 5. **Steps to reproduce** the issue
 6. **Sample JSON files** (if relevant and non-sensitive)
 
-Create an issue at: [GitHub Issues](https://github.com/AbelMSG89/json-synchronizer/issues)
+Create an issue at: [GitHub Issues](https://github.com/AbelMSG89/json-synchronized/issues)
 
 ## Related Documentation
 

@@ -4,7 +4,7 @@
 
 ### Primary Base Project
 
-**[oscar-green/json-synchronizer](https://github.com/oscar-green/json-synchronizer)**
+**[oscar-green/json-synchronized](https://github.com/oscar-green/json-synchronized)**
 
 - **Author**: oscar-green
 - **License**: MIT
@@ -68,7 +68,7 @@ This fork significantly extends the original functionality with:
 
 We extend our gratitude to:
 
-- **oscar-green** for creating the original JSON Synchronizer extension
+- **oscar-green** for creating the original JSON Synchronized extension
   that serves as the foundation
 - **DionJChapman** for the translation service architecture and patterns
 - **Microsoft**, **Google**, and **Amazon** for providing translation APIs
@@ -79,7 +79,7 @@ We extend our gratitude to:
 
 This project respects and maintains the original MIT licenses of both base projects:
 
-- Original JSON Synchronizer: MIT License
+- Original JSON Synchronized: MIT License
 - Translation service patterns: MIT License
 - This enhanced version: MIT License
 

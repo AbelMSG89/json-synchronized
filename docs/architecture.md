@@ -2,7 +2,7 @@
 
 ## Overview
 
-JSON Synchronizer is a VS Code extension built with TypeScript, React, and modern
+JSON Synchronized is a VS Code extension built with TypeScript, React, and modern
 web technologies. The architecture follows a modular design with clear separation
 of concerns between the extension backend and webview frontend.
 
@@ -33,7 +33,7 @@ of concerns between the extension backend and webview frontend.
 ## Project Structure
 
 ```bash
-json-synchronizer/
+json-synchronized/
 ├── src/                          # Source code
 │   ├── extension.ts             # Main extension entry point
 │   ├── webview.tsx              # React webview application
@@ -110,7 +110,7 @@ Key responsibilities:
 
 ```typescript
 // Command registration
-vscode.commands.registerCommand("json-synchronizer.synchronize", ...)
+vscode.commands.registerCommand("json-synchronized.synchronize", ...)
 
 // Webview creation
 const panel = vscode.window.createWebviewPanel(...)

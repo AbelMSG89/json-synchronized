@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Table } from "./components/Table";
-import { useJSONData } from "./hooks/useJSONSynchronizer";
+import { useJSONData } from "./hooks/useJSONSynchronized";
 import { sendVSCodeMessage } from "./utils/dataUtils";
 import css from "./styles.css";
 

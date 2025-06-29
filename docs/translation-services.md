@@ -3,7 +3,7 @@
 ## Overview
 
 This guide provides step-by-step instructions for setting up translation services
-with JSON Synchronizer. Each service has different requirements and pricing models.
+with JSON Synchronized. Each service has different requirements and pricing models.
 
 ## Google Cloud Translation API
 
@@ -31,22 +31,22 @@ with JSON Synchronizer. Each service has different requirements and pricing mode
    - Copy the generated API key
    - (Optional) Restrict the key to Translation API only
 
-4. **Configure JSON Synchronizer**
+4. **Configure JSON Synchronized**
 
    **Using Environment Variables (Recommended):**
 
    ```bash
    # In your .env file
-   JSON_SYNCHRONIZER_GOOGLE_KEY=your-api-key-here
-   JSON_SYNCHRONIZER_GOOGLE_PROJECT=your-project-id
+   JSON_SYNCHRONIZED_GOOGLE_KEY=your-api-key-here
+   JSON_SYNCHRONIZED_GOOGLE_PROJECT=your-project-id
    ```
 
    **Using VS Code Settings:**
 
    ```json
    {
-     "json-synchronizer.translationService": "GoogleTranslator",
-     "json-synchronizer.translationServiceGoogle": [
+     "json-synchronized.translationService": "GoogleTranslator",
+     "json-synchronized.translationServiceGoogle": [
        "your-api-key-here",
        "",
        "your-project-id"
@@ -86,22 +86,22 @@ with JSON Synchronizer. Each service has different requirements and pricing mode
    - Go to "Keys and Endpoint"
    - Copy "Key 1" and "Location/Region"
 
-4. **Configure JSON Synchronizer**
+4. **Configure JSON Synchronized**
 
    **Using Environment Variables (Recommended):**
 
    ```bash
    # In your .env file
-   JSON_SYNCHRONIZER_MICROSOFT_KEY=your-subscription-key
-   JSON_SYNCHRONIZER_MICROSOFT_REGION=eastus
+   JSON_SYNCHRONIZED_MICROSOFT_KEY=your-subscription-key
+   JSON_SYNCHRONIZED_MICROSOFT_REGION=eastus
    ```
 
    **Using VS Code Settings:**
 
    ```json
    {
-     "json-synchronizer.translationService": "MicrosoftTranslator",
-     "json-synchronizer.translationServiceMicrosoft": [
+     "json-synchronized.translationService": "MicrosoftTranslator",
+     "json-synchronized.translationServiceMicrosoft": [
        "your-subscription-key",
        "",
        "eastus"
@@ -157,23 +157,23 @@ with JSON Synchronizer. Each service has different requirements and pricing mode
    - Download or copy the Access Key ID and Secret Access Key
    - Choose your preferred AWS region
 
-4. **Configure JSON Synchronizer**
+4. **Configure JSON Synchronized**
 
    **Using Environment Variables (Recommended):**
 
    ```bash
    # In your .env file
-   JSON_SYNCHRONIZER_AMAZON_KEY=your-access-key-id
-   JSON_SYNCHRONIZER_AMAZON_SECRET=your-secret-access-key
-   JSON_SYNCHRONIZER_AMAZON_REGION=us-east-1
+   JSON_SYNCHRONIZED_AMAZON_KEY=your-access-key-id
+   JSON_SYNCHRONIZED_AMAZON_SECRET=your-secret-access-key
+   JSON_SYNCHRONIZED_AMAZON_REGION=us-east-1
    ```
 
    **Using VS Code Settings:**
 
    ```json
    {
-     "json-synchronizer.translationService": "AmazonTranslator",
-     "json-synchronizer.translationServiceAmazon": [
+     "json-synchronized.translationService": "AmazonTranslator",
+     "json-synchronized.translationServiceAmazon": [
        "your-access-key-id",
        "your-secret-access-key",
        "us-east-1"
@@ -206,16 +206,16 @@ You can easily switch between translation services:
 
    ```bash
    # Change from Google to Microsoft
-   # JSON_SYNCHRONIZER_GOOGLE_KEY=...
-   JSON_SYNCHRONIZER_MICROSOFT_KEY=your-microsoft-key
-   JSON_SYNCHRONIZER_MICROSOFT_REGION=eastus
+   # JSON_SYNCHRONIZED_GOOGLE_KEY=...
+   JSON_SYNCHRONIZED_MICROSOFT_KEY=your-microsoft-key
+   JSON_SYNCHRONIZED_MICROSOFT_REGION=eastus
    ```
 
 2. **Update VS Code Setting**
 
    ```json
    {
-     "json-synchronizer.translationService": "MicrosoftTranslator"
+     "json-synchronized.translationService": "MicrosoftTranslator"
    }
    ```
 

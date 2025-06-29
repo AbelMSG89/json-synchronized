@@ -15,7 +15,7 @@ export class AmazonTranslator implements ITranslationService {
       TranslationConfiguration.TRANSLATION_SERVICE_API_KEY;
     if (!apiKey || apiKey.length === 0) {
       vscode.window.showErrorMessage(
-        "Your Amazon API Key is blank. Please update setting json-synchronizer.translationServiceApiKey",
+        "Your Amazon API Key is blank. Please update setting json-synchronized.translationServiceApiKey",
       );
       return { [request.sourceLanguage]: request.text };
     }
@@ -25,7 +25,7 @@ export class AmazonTranslator implements ITranslationService {
       TranslationConfiguration.TRANSLATION_SERVICE_API_SECRET;
     if (!apiSecret || apiSecret.length === 0) {
       vscode.window.showErrorMessage(
-        "Your Amazon API Secret is blank. Please update setting json-synchronizer.translationServiceApiSecret",
+        "Your Amazon API Secret is blank. Please update setting json-synchronized.translationServiceApiSecret",
       );
       return { [request.sourceLanguage]: request.text };
     }
@@ -35,7 +35,7 @@ export class AmazonTranslator implements ITranslationService {
       TranslationConfiguration.TRANSLATION_SERVICE_API_REGION;
     if (!apiRegion || apiRegion.length === 0) {
       vscode.window.showErrorMessage(
-        "Your Amazon API Region is blank. Please update setting json-synchronizer.translationServiceApiRegion",
+        "Your Amazon API Region is blank. Please update setting json-synchronized.translationServiceApiRegion",
       );
       return { [request.sourceLanguage]: request.text };
     }

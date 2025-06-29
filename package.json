@@ -1,11 +1,11 @@
 {
-  "name": "json-synchronizer",
-  "displayName": "JSON Synchronizer",
+  "name": "json-synchronized",
+  "displayName": "JSON Synchronized",
   "description": "Synchronize JSON objects across multiple files by editing them in a convenient table. Suitable for i18n management.",
   "version": "1.0.5",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AbelMSG89/json-synchronizer"
+    "url": "https://github.com/AbelMSG89/json-synchronized"
   },
   "publisher": "AbelMSG89",
   "engines": {
@@ -29,9 +29,9 @@
   "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
-      "title": "JSON Synchronizer",
+      "title": "JSON Synchronized",
       "properties": {
-        "json-synchronizer.translationService": {
+        "json-synchronized.translationService": {
           "type": "string",
           "enum": [
             "",
@@ -42,22 +42,22 @@
           "default": "",
           "description": "Translation service to use for automatic translations"
         },
-        "json-synchronizer.translationServiceApiKey": {
+        "json-synchronized.translationServiceApiKey": {
           "type": "string",
           "default": "",
           "description": "API key for the translation service"
         },
-        "json-synchronizer.translationServiceApiSecret": {
+        "json-synchronized.translationServiceApiSecret": {
           "type": "string",
           "default": "",
           "description": "API secret for the translation service (required for Amazon)"
         },
-        "json-synchronizer.translationServiceApiRegion": {
+        "json-synchronized.translationServiceApiRegion": {
           "type": "string",
           "default": "",
           "description": "API region for the translation service"
         },
-        "json-synchronizer.translationServiceAmazon": {
+        "json-synchronized.translationServiceAmazon": {
           "type": "array",
           "items": {
             "type": "string"
@@ -69,7 +69,7 @@
           ],
           "description": "Amazon Translate API settings [apiKey, apiSecret, apiRegion]"
         },
-        "json-synchronizer.translationServiceGoogle": {
+        "json-synchronized.translationServiceGoogle": {
           "type": "array",
           "items": {
             "type": "string"
@@ -81,7 +81,7 @@
           ],
           "description": "Google Translate API settings [apiKey, apiSecret, projectId]"
         },
-        "json-synchronizer.translationServiceMicrosoft": {
+        "json-synchronized.translationServiceMicrosoft": {
           "type": "array",
           "items": {
             "type": "string"
@@ -93,12 +93,12 @@
           ],
           "description": "Microsoft Translate API settings [apiKey, apiSecret, apiRegion]"
         },
-        "json-synchronizer.defaultLanguage": {
+        "json-synchronized.defaultLanguage": {
           "type": "string",
           "default": "en",
           "description": "Default language code for translations"
         },
-        "json-synchronizer.envFilePath": {
+        "json-synchronized.envFilePath": {
           "type": "string",
           "default": "",
           "description": "Custom path to environment file (e.g., '.env.development', '.env.production', '/absolute/path/to/.env'). Supports relative paths from workspace root and absolute paths. If empty, uses .env file from workspace root or system environment variables."
@@ -107,20 +107,20 @@
     },
     "commands": [
       {
-        "command": "json-synchronizer.synchronize",
+        "command": "json-synchronized.synchronize",
         "title": "Synchronize JSON"
       },
       {
-        "command": "json-synchronizer.selectEnvFile",
+        "command": "json-synchronized.selectEnvFile",
         "title": "Select Environment File",
-        "category": "JSON Synchronizer"
+        "category": "JSON Synchronized"
       }
     ],
     "menus": {
       "explorer/context": [
         {
           "when": "explorerResourceIsFolder",
-          "command": "json-synchronizer.synchronize",
+          "command": "json-synchronized.synchronize",
           "group": "navigation"
         }
       ]

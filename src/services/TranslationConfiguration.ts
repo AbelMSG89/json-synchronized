@@ -10,33 +10,33 @@ export class TranslationConfiguration {
   static get TRANSLATION_SERVICE(): TranslationServiceEnum | null {
     const value = vscode.workspace
       .getConfiguration()
-      .get<string>("json-synchronizer.translationService");
+      .get<string>("json-synchronized.translationService");
     return value && value !== "" ? (value as TranslationServiceEnum) : null;
   }
 
   static get TRANSLATION_SERVICE_API_KEY(): string | null {
     // Try environment variable first, then VS Code setting
-    const envValue = process.env.JSON_SYNCHRONIZER_API_KEY;
+    const envValue = process.env.JSON_SYNCHRONIZED_API_KEY;
     if (envValue && envValue !== "") {
       return envValue;
     }
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string>("json-synchronizer.translationServiceApiKey");
+      .get<string>("json-synchronized.translationServiceApiKey");
     return value && value !== "" ? value : null;
   }
 
   static get TRANSLATION_SERVICE_API_SECRET(): string | null {
     // Try environment variable first, then VS Code setting
-    const envValue = process.env.JSON_SYNCHRONIZER_API_SECRET;
+    const envValue = process.env.JSON_SYNCHRONIZED_API_SECRET;
     if (envValue && envValue !== "") {
       return envValue;
     }
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string>("json-synchronizer.translationServiceApiSecret");
+      .get<string>("json-synchronized.translationServiceApiSecret");
     return value && value !== "" ? value : null;
   }
 
@@ -49,7 +49,7 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string>("json-synchronizer.translationServiceApiRegion");
+      .get<string>("json-synchronized.translationServiceApiRegion");
     return value && value !== "" ? value : null;
   }
 
@@ -63,7 +63,7 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string[]>("json-synchronizer.translationServiceAmazon");
+      .get<string[]>("json-synchronized.translationServiceAmazon");
     return value && value.length === 3 && value[0] !== "" ? value[0] : null;
   }
 
@@ -78,7 +78,7 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string[]>("json-synchronizer.translationServiceAmazon");
+      .get<string[]>("json-synchronized.translationServiceAmazon");
     return value && value.length === 3 && value[1] !== "" ? value[1] : null;
   }
 
@@ -93,7 +93,7 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string[]>("json-synchronizer.translationServiceAmazon");
+      .get<string[]>("json-synchronized.translationServiceAmazon");
     return value && value.length === 3 && value[2] !== "" ? value[2] : null;
   }
 
@@ -107,7 +107,7 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string[]>("json-synchronizer.translationServiceGoogle");
+      .get<string[]>("json-synchronized.translationServiceGoogle");
     return value && value.length === 3 && value[0] !== "" ? value[0] : null;
   }
 
@@ -120,7 +120,7 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string[]>("json-synchronizer.translationServiceGoogle");
+      .get<string[]>("json-synchronized.translationServiceGoogle");
     return value && value.length === 3 && value[1] !== "" ? value[1] : null;
   }
 
@@ -135,7 +135,7 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string[]>("json-synchronizer.translationServiceGoogle");
+      .get<string[]>("json-synchronized.translationServiceGoogle");
     return value && value.length === 3 && value[2] !== "" ? value[2] : null;
   }
 
@@ -150,7 +150,7 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string[]>("json-synchronizer.translationServiceMicrosoft");
+      .get<string[]>("json-synchronized.translationServiceMicrosoft");
     return value && value.length === 3 && value[0] !== "" ? value[0] : null;
   }
 
@@ -163,7 +163,7 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string[]>("json-synchronizer.translationServiceMicrosoft");
+      .get<string[]>("json-synchronized.translationServiceMicrosoft");
     return value && value.length === 3 && value[1] !== "" ? value[1] : null;
   }
 
@@ -178,14 +178,14 @@ export class TranslationConfiguration {
 
     const value = vscode.workspace
       .getConfiguration()
-      .get<string[]>("json-synchronizer.translationServiceMicrosoft");
+      .get<string[]>("json-synchronized.translationServiceMicrosoft");
     return value && value.length === 3 && value[2] !== "" ? value[2] : null;
   }
 
   static get DEFAULT_LANGUAGE(): string {
     const value = vscode.workspace
       .getConfiguration()
-      .get<string>("json-synchronizer.defaultLanguage");
+      .get<string>("json-synchronized.defaultLanguage");
     return value !== undefined ? value : "en";
   }
 

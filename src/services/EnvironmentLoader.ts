@@ -29,7 +29,7 @@ export class EnvironmentLoader {
    */
   private static getCustomEnvPath(): string | null {
     const config = vscode.workspace.getConfiguration();
-    const envFilePath = config.get<string>("json-synchronizer.envFilePath");
+    const envFilePath = config.get<string>("json-synchronized.envFilePath");
 
     let targetPath: string;
 
@@ -117,13 +117,13 @@ export class EnvironmentLoader {
       "AWS_ACCESS_KEY_ID",
       "AWS_SECRET_ACCESS_KEY",
       "AWS_DEFAULT_REGION",
-      "JSON_SYNCHRONIZER_GOOGLE_KEY",
-      "JSON_SYNCHRONIZER_GOOGLE_PROJECT",
-      "JSON_SYNCHRONIZER_MICROSOFT_KEY",
-      "JSON_SYNCHRONIZER_MICROSOFT_REGION",
-      "JSON_SYNCHRONIZER_AMAZON_KEY",
-      "JSON_SYNCHRONIZER_AMAZON_SECRET",
-      "JSON_SYNCHRONIZER_AMAZON_REGION",
+      "JSON_SYNCHRONIZED_GOOGLE_KEY",
+      "JSON_SYNCHRONIZED_GOOGLE_PROJECT",
+      "JSON_SYNCHRONIZED_MICROSOFT_KEY",
+      "JSON_SYNCHRONIZED_MICROSOFT_REGION",
+      "JSON_SYNCHRONIZED_AMAZON_KEY",
+      "JSON_SYNCHRONIZED_AMAZON_SECRET",
+      "JSON_SYNCHRONIZED_AMAZON_REGION",
     ];
 
     envKeys.forEach((key) => {
@@ -152,7 +152,7 @@ export class EnvironmentLoader {
   static getLoadedEnvStatus(): string {
     if (this.loadedEnvPath) {
       const fileName = path.basename(this.loadedEnvPath);
-      const isDefault = fileName === ".env" && !vscode.workspace.getConfiguration().get<string>("json-synchronizer.envFilePath");
+      const isDefault = fileName === ".env" && !vscode.workspace.getConfiguration().get<string>("json-synchronized.envFilePath");
       return isDefault 
         ? `Using default .env file: ${fileName}`
         : `Custom env loaded: ${fileName}`;

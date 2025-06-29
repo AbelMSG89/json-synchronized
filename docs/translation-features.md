@@ -2,7 +2,7 @@
 
 ## Overview
 
-JSON Synchronizer provides powerful automatic translation capabilities using
+JSON Synchronized provides powerful automatic translation capabilities using
 multiple cloud translation services. Translate your JSON content to multiple
 languages with a single click while preserving formatting and placeholders.
 
@@ -85,7 +85,7 @@ Choose your preferred translation service in VS Code settings:
 
 ```json
 {
-  "json-synchronizer.translationService": "GoogleTranslator"
+  "json-synchronized.translationService": "GoogleTranslator"
 }
 ```
 
@@ -97,7 +97,7 @@ Set the default source language:
 
 ```json
 {
-  "json-synchronizer.defaultLanguage": "en"
+  "json-synchronized.defaultLanguage": "en"
 }
 ```
 
@@ -107,24 +107,24 @@ Configure API credentials securely:
 
 ```bash
 # Google Translate
-JSON_SYNCHRONIZER_GOOGLE_KEY=your-api-key
-JSON_SYNCHRONIZER_GOOGLE_PROJECT=your-project-id
+JSON_SYNCHRONIZED_GOOGLE_KEY=your-api-key
+JSON_SYNCHRONIZED_GOOGLE_PROJECT=your-project-id
 
 # Microsoft Translator  
-JSON_SYNCHRONIZER_MICROSOFT_KEY=your-subscription-key
-JSON_SYNCHRONIZER_MICROSOFT_REGION=eastus
+JSON_SYNCHRONIZED_MICROSOFT_KEY=your-subscription-key
+JSON_SYNCHRONIZED_MICROSOFT_REGION=eastus
 
 # Amazon Translate
-JSON_SYNCHRONIZER_AMAZON_KEY=your-access-key-id
-JSON_SYNCHRONIZER_AMAZON_SECRET=your-secret-access-key
-JSON_SYNCHRONIZER_AMAZON_REGION=us-east-1
+JSON_SYNCHRONIZED_AMAZON_KEY=your-access-key-id
+JSON_SYNCHRONIZED_AMAZON_SECRET=your-secret-access-key
+JSON_SYNCHRONIZED_AMAZON_REGION=us-east-1
 ```
 
 ## Usage Examples
 
 ### Basic Translation
 
-1. Open JSON Synchronizer on a folder with multiple language files
+1. Open JSON Synchronized on a folder with multiple language files
 2. Enter text in any field
 3. Hover over the cell and click the 🌐 button
 4. Watch translations appear in other language files
@@ -248,7 +248,7 @@ For large-scale translation projects, consider:
 
 ### Integration with Translation Management
 
-JSON Synchronizer can integrate with:
+JSON Synchronized can integrate with:
 
 - Translation management platforms
 - CI/CD pipelines

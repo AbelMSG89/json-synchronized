@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Listen for configuration changes to reload environment file
   const configChangeListener = vscode.workspace.onDidChangeConfiguration(
     (e) => {
-      if (e.affectsConfiguration("json-synchronizer.envFilePath")) {
+      if (e.affectsConfiguration("json-synchronized.envFilePath")) {
         EnvironmentLoader.loadCustomEnvFile();
       }
     },
@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(configChangeListener);
 
   const disposable = vscode.commands.registerCommand(
-    "json-synchronizer.synchronize",
+    "json-synchronized.synchronize",
     async (uri) => {
       const files = await vscode.workspace.findFiles(
         new vscode.RelativePattern(uri.fsPath, "**/*.json"),
@@ -29,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   const selectEnvFileCommand = vscode.commands.registerCommand(
-    "json-synchronizer.selectEnvFile",
+    "json-synchronized.selectEnvFile",
     async () => {
       await selectEnvironmentFile();
     },
@@ -544,14 +544,14 @@ async function selectEnvironmentFile() {
 
     const selected = await vscode.window.showQuickPick(items, {
       placeHolder: "Select an environment file to use",
-      title: "JSON Synchronizer - Environment File",
+      title: "JSON Synchronized - Environment File",
     });
 
     if (selected !== undefined) {
       // Update the configuration
       const config = vscode.workspace.getConfiguration();
       await config.update(
-        "json-synchronizer.envFilePath",
+        "json-synchronized.envFilePath",
         selected.envPath,
         vscode.ConfigurationTarget.Workspace,
       );

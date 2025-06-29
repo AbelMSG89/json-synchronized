@@ -1,6 +1,6 @@
-# JSON Synchronizer Documentation
+# JSON Synchronized Documentation
 
-Complete documentation for the JSON Synchronizer VS Code extension.
+Complete documentation for the JSON Synchronized VS Code extension.
 
 ## Table of Contents
 
