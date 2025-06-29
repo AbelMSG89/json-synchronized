@@ -346,7 +346,7 @@ Use the Command Palette:
    
    # To .env file
    JSON_SYNCHRONIZED_GOOGLE_KEY=key
-   JSON_SYNCHRONIZER_GOOGLE_PROJECT=project
+   JSON_SYNCHRONIZED_GOOGLE_PROJECT=project
    ```
 
 3. **Remove from VS Code settings**:
@@ -371,7 +371,7 @@ Use the Command Palette:
 2. **Copy to .env file**:
 
    ```bash
-   echo "JSON_SYNCHRONIZER_GOOGLE_KEY=$GOOGLE_API_KEY" >> .env
+   echo "JSON_SYNCHRONIZED_GOOGLE_KEY=$GOOGLE_API_KEY" >> .env
    ```
 
 3. **Update variable names** if using custom prefix
@@ -403,8 +403,8 @@ Create workspace scripts for environment switching:
 ```yaml
 - name: Setup Translation Environment
   run: |
-    echo "JSON_SYNCHRONIZER_GOOGLE_KEY=${{ secrets.GOOGLE_API_KEY }}" >> .env
-    echo "JSON_SYNCHRONIZER_GOOGLE_PROJECT=${{ secrets.GOOGLE_PROJECT }}" >> .env
+    echo "JSON_SYNCHRONIZED_GOOGLE_KEY=${{ secrets.GOOGLE_API_KEY }}" >> .env
+    echo "JSON_SYNCHRONIZED_GOOGLE_PROJECT=${{ secrets.GOOGLE_PROJECT }}" >> .env
 ```
 
 **Docker**:
@@ -414,8 +414,8 @@ Create workspace scripts for environment switching:
 COPY .env.example .env
 
 # Set environment variables
-ENV JSON_SYNCHRONIZER_GOOGLE_KEY=${GOOGLE_API_KEY}
-ENV JSON_SYNCHRONIZER_GOOGLE_PROJECT=${GOOGLE_PROJECT}
+ENV JSON_SYNCHRONIZED_GOOGLE_KEY=${GOOGLE_API_KEY}
+ENV JSON_SYNCHRONIZED_GOOGLE_PROJECT=${GOOGLE_PROJECT}
 ```
 
 This configuration system provides maximum flexibility while maintaining security

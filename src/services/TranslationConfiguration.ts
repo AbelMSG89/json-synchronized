@@ -42,7 +42,7 @@ export class TranslationConfiguration {
 
   static get TRANSLATION_SERVICE_API_REGION(): string | null {
     // Try environment variable first, then VS Code setting
-    const envValue = process.env.JSON_SYNCHRONIZER_API_REGION;
+    const envValue = process.env.JSON_SYNCHRONIZED_API_REGION;
     if (envValue && envValue !== "") {
       return envValue;
     }
@@ -56,7 +56,7 @@ export class TranslationConfiguration {
   static get TRANSLATION_SERVICE_AMAZON_KEY(): string | null {
     // Try environment variable first
     const envValue =
-      process.env.AWS_ACCESS_KEY_ID || process.env.JSON_SYNCHRONIZER_AMAZON_KEY;
+      process.env.AWS_ACCESS_KEY_ID || process.env.JSON_SYNCHRONIZED_AMAZON_KEY;
     if (envValue && envValue !== "") {
       return envValue;
     }
@@ -71,7 +71,7 @@ export class TranslationConfiguration {
     // Try environment variable first
     const envValue =
       process.env.AWS_SECRET_ACCESS_KEY ||
-      process.env.JSON_SYNCHRONIZER_AMAZON_SECRET;
+      process.env.JSON_SYNCHRONIZED_AMAZON_SECRET;
     if (envValue && envValue !== "") {
       return envValue;
     }
@@ -86,7 +86,7 @@ export class TranslationConfiguration {
     // Try environment variable first
     const envValue =
       process.env.AWS_DEFAULT_REGION ||
-      process.env.JSON_SYNCHRONIZER_AMAZON_REGION;
+      process.env.JSON_SYNCHRONIZED_AMAZON_REGION;
     if (envValue && envValue !== "") {
       return envValue;
     }
@@ -100,7 +100,7 @@ export class TranslationConfiguration {
   static get TRANSLATION_SERVICE_GOOGLE_KEY(): string | null {
     // Try environment variable first
     const envValue =
-      process.env.GOOGLE_API_KEY || process.env.JSON_SYNCHRONIZER_GOOGLE_KEY;
+      process.env.GOOGLE_API_KEY || process.env.JSON_SYNCHRONIZED_GOOGLE_KEY;
     if (envValue && envValue !== "") {
       return envValue;
     }
@@ -113,7 +113,7 @@ export class TranslationConfiguration {
 
   static get TRANSLATION_SERVICE_GOOGLE_SECRET(): string | null {
     // Try environment variable first
-    const envValue = process.env.JSON_SYNCHRONIZER_GOOGLE_SECRET;
+    const envValue = process.env.JSON_SYNCHRONIZED_GOOGLE_SECRET;
     if (envValue && envValue !== "") {
       return envValue;
     }
@@ -128,7 +128,7 @@ export class TranslationConfiguration {
     // Try environment variable first
     const envValue =
       process.env.GOOGLE_CLOUD_PROJECT ||
-      process.env.JSON_SYNCHRONIZER_GOOGLE_PROJECT;
+      process.env.JSON_SYNCHRONIZED_GOOGLE_PROJECT;
     if (envValue && envValue !== "") {
       return envValue;
     }
@@ -143,7 +143,7 @@ export class TranslationConfiguration {
     // Try environment variable first
     const envValue =
       process.env.AZURE_TRANSLATOR_KEY ||
-      process.env.JSON_SYNCHRONIZER_MICROSOFT_KEY;
+      process.env.JSON_SYNCHRONIZED_MICROSOFT_KEY;
     if (envValue && envValue !== "") {
       return envValue;
     }
@@ -156,7 +156,7 @@ export class TranslationConfiguration {
 
   static get TRANSLATION_SERVICE_MICROSOFT_SECRET(): string | null {
     // Try environment variable first
-    const envValue = process.env.JSON_SYNCHRONIZER_MICROSOFT_SECRET;
+    const envValue = process.env.JSON_SYNCHRONIZED_MICROSOFT_SECRET;
     if (envValue && envValue !== "") {
       return envValue;
     }
@@ -171,7 +171,7 @@ export class TranslationConfiguration {
     // Try environment variable first
     const envValue =
       process.env.AZURE_TRANSLATOR_REGION ||
-      process.env.JSON_SYNCHRONIZER_MICROSOFT_REGION;
+      process.env.JSON_SYNCHRONIZED_MICROSOFT_REGION;
     if (envValue && envValue !== "") {
       return envValue;
     }

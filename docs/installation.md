@@ -69,8 +69,8 @@ translation service:
 
    ```bash
    # For Google Translate
-   JSON_SYNCHRONIZER_GOOGLE_KEY=your-api-key
-   JSON_SYNCHRONIZER_GOOGLE_PROJECT=your-project-id
+   JSON_SYNCHRONIZED_GOOGLE_KEY=your-api-key
+   JSON_SYNCHRONIZED_GOOGLE_PROJECT=your-project-id
    ```
 
 3. Configure the service in VS Code settings:
