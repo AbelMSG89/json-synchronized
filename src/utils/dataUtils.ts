@@ -76,7 +76,8 @@ export const getAddControlsLevelClass = (depth: number): string => {
 export const extractLanguageFromFileName = (fileName: string): string => {
   // Extract language code from file names like 'en', 'es', 'fr', 'en-US', 'pt-BR', etc.
   // Handle file names like 'en/comments', 'en-US/messages', etc.
-  const parts = fileName.split("/");
+  // Support both Windows (\) and Unix (/) path separators
+  const parts = fileName.split(/[/\\]/);
   const langPart = parts[0];
 
   // Remove any suffixes and get the language code

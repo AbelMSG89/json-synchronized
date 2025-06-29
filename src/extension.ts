@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import fsPromise from "fs/promises";
 import fs from "fs";
+import * as path from "path";
 import { TranslationService } from "./services/TranslationService";
 import { EnvironmentLoader } from "./services/EnvironmentLoader";
 
@@ -105,13 +106,13 @@ async function createWebviewPanel(
       retainContextWhenHidden: true,
       localResourceRoots: [
         // allow the webview to load local resources from the 'dist' directory
-        vscode.Uri.joinPath(context.extensionUri, "dist"),
+        vscode.Uri.file(path.join(context.extensionPath, "dist")),
       ],
     },
   );
 
   const scriptUri = panel.webview.asWebviewUri(
-    vscode.Uri.joinPath(context.extensionUri, "dist", "webview.js"),
+    vscode.Uri.file(path.join(context.extensionPath, "dist", "webview.js")),
   );
 
   panel.webview.html = `
@@ -120,7 +121,7 @@ async function createWebviewPanel(
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="Content-Security-Policy" >
+      <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-eval' 'unsafe-inline' ${panel.webview.cspSource};">
     </head>
     <body>
       <div id="root"></div>
@@ -130,6 +131,7 @@ async function createWebviewPanel(
   `;
 
   // send initial data
+  console.log("Sending initial data to webview:", uriData);
   panel.webview.postMessage({ type: "json", data: uriData });
 
   panel.webview.onDidReceiveMessage(
@@ -502,14 +504,22 @@ async function createWebviewPanel(
  */
 function getFileName(baseUriPath: string, uri: vscode.Uri) {
   const relativePath = uri.fsPath.substring(baseUriPath.length);
-  // Remove leading slash if present
-  const cleanPath = relativePath.startsWith("/")
-    ? relativePath.substring(1)
-    : relativePath;
+  console.log("Processing file path:", {
+    fullPath: uri.fsPath,
+    basePath: baseUriPath,
+    relativePath,
+  });
+
+  // Remove leading slash or backslash if present
+  const cleanPath =
+    relativePath.startsWith("/") || relativePath.startsWith("\\")
+      ? relativePath.substring(1)
+      : relativePath;
 
   // Remove .json extension
   const withoutExtension = cleanPath.replace(/\.json$/, "");
 
+  console.log("Final filename:", withoutExtension);
   return withoutExtension;
 }
 

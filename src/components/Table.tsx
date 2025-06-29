@@ -25,6 +25,7 @@ export const Table: React.FC<TableProps> = ({
 }) => {
   const fileNames = getFileNames(data);
   const dataArray = getDataArray(data);
+
   const tableRows = generateTableRows(
     dataArray,
     0,
@@ -68,12 +69,6 @@ export const Table: React.FC<TableProps> = ({
   const finishEdit = (path: string[], newKey: string) => {
     if (newKey.trim() === "") {
       const rowId = path.join("-");
-      console.log(
-        "Setting error for rowId:",
-        rowId,
-        "Current editingError:",
-        editingError,
-      );
       setEditError(rowId);
       sendVSCodeMessage({
         command: "showWarning",
@@ -114,14 +109,6 @@ export const Table: React.FC<TableProps> = ({
                       const className = hasError
                         ? "json-table__edit-input json-table__edit-input--error"
                         : "json-table__edit-input";
-                      console.log(
-                        "Group Input className for",
-                        row.id,
-                        ":",
-                        className,
-                        "editingError:",
-                        editingError,
-                      );
                       return className;
                     })()}
                     autoFocus
@@ -380,19 +367,36 @@ export const Table: React.FC<TableProps> = ({
 
   return (
     <div className="json-table-container">
-      <table className="json-table">
-        <thead>
-          <tr className="json-table__row">
-            <th className="json-table__header">Key</th>
-            {fileNames.map((name, index) => (
-              <th key={index} className="json-table__header">
-                {name}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>{tableRows.map(renderTableRow)}</tbody>
-      </table>
+      {fileNames.length === 0 ? (
+        <div
+          style={{ padding: "20px", color: "var(--vscode-editor-foreground)" }}
+        >
+          <h3>No JSON files found</h3>
+          <p>Make sure you have JSON files in the selected folder.</p>
+          <p>
+            Debug info:{" "}
+            {JSON.stringify({
+              dataKeys: Object.keys(data),
+              fileNames,
+              dataArrayLength: dataArray.length,
+            })}
+          </p>
+        </div>
+      ) : (
+        <table className="json-table">
+          <thead>
+            <tr className="json-table__row">
+              <th className="json-table__header">Key</th>
+              {fileNames.map((name, index) => (
+                <th key={index} className="json-table__header">
+                  {extractLanguageFromFileName(name)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>{tableRows.map(renderTableRow)}</tbody>
+        </table>
+      )}
     </div>
   );
 };

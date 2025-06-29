@@ -152,8 +152,12 @@ export class EnvironmentLoader {
   static getLoadedEnvStatus(): string {
     if (this.loadedEnvPath) {
       const fileName = path.basename(this.loadedEnvPath);
-      const isDefault = fileName === ".env" && !vscode.workspace.getConfiguration().get<string>("json-synchronized.envFilePath");
-      return isDefault 
+      const isDefault =
+        fileName === ".env" &&
+        !vscode.workspace
+          .getConfiguration()
+          .get<string>("json-synchronized.envFilePath");
+      return isDefault
         ? `Using default .env file: ${fileName}`
         : `Custom env loaded: ${fileName}`;
     }
