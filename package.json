@@ -2,7 +2,7 @@
   "name": "json-synchronized",
   "displayName": "JSON Synchronized",
   "description": "Synchronize JSON objects across multiple files by editing them in a convenient table. Suitable for i18n management.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/AbelMSG89/json-synchronized"

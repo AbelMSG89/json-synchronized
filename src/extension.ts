@@ -131,7 +131,6 @@ async function createWebviewPanel(
   `;
 
   // send initial data
-  console.log("Sending initial data to webview:", uriData);
   panel.webview.postMessage({ type: "json", data: uriData });
 
   panel.webview.onDidReceiveMessage(
@@ -504,11 +503,6 @@ async function createWebviewPanel(
  */
 function getFileName(baseUriPath: string, uri: vscode.Uri) {
   const relativePath = uri.fsPath.substring(baseUriPath.length);
-  console.log("Processing file path:", {
-    fullPath: uri.fsPath,
-    basePath: baseUriPath,
-    relativePath,
-  });
 
   // Remove leading slash or backslash if present
   const cleanPath =
@@ -519,7 +513,6 @@ function getFileName(baseUriPath: string, uri: vscode.Uri) {
   // Remove .json extension
   const withoutExtension = cleanPath.replace(/\.json$/, "");
 
-  console.log("Final filename:", withoutExtension);
   return withoutExtension;
 }
 

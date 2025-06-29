@@ -1,20 +1,28 @@
 # Change Log
 
-## [1.0.0]
+## [1.1.1]
 
-- Initial release
+### 🐛 Bug Fixes
 
-## [1.0.1]
+- **Windows Compatibility**: Fixed language code extraction for Windows file paths
+  - Language headers now display as `fr`, `es`, `en` instead of `\fr`, `\es`,
+    `\en` on Windows
+  - Improved cross-platform path handling using both `/` and `\` separators
+- **Webview Content Security Policy**: Fixed incomplete CSP that prevented the
+  extension from loading
+- **Path Resolution**: Enhanced file path processing for both Windows and
+  Unix-based systems
 
-- Added logo
+### 🔧 Technical Improvements
 
-## [1.0.3]
-
-- Handle discard changes in Git
-
-## [1.0.4]
-
-- Update dependencies
+- **Cross-Platform Path Handling**: Updated `extractLanguageFromFileName` to
+  support both Windows (`\`) and Unix (`/`) path separators
+- **Table Header Display**: Column headers now show clean language codes
+  extracted from file names
+- **TypeScript Configuration**: Improved tsconfig.json to include all source
+  files
+- **VS Code API Compatibility**: Fixed deprecated `joinPath` usage for better
+  compatibility
 
 ## [1.1.0]
 
@@ -47,3 +55,20 @@
 - **Environment Configuration**: Step-by-step setup guides
 - **Troubleshooting**: Common issues and solutions
 - **API Reference**: Complete API documentation
+
+## [1.0.4]
+
+- Update dependencies
+
+## [1.0.3]
+
+- Handle discard changes in Git
+
+## [1.0.1]
+
+- Added logo
+
+## [1.0.0]
+
+- Initial release
+- 
